@@ -10,12 +10,12 @@ const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
-    }),
+    }).authorization((allow) => [allow.publicApiKey()]),
     Note: a
     .model({
       content: a.string(),
       complete: a.boolean()
-    }),
+    }).authorization((allow) => [allow.publicApiKey()]),
     Clinic: a
     .customType({
       id: a.id(),
