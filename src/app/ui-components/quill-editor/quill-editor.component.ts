@@ -34,7 +34,7 @@ import {
   EditorSelectionChangeEvent,
   EditorTextChangeEvent,
 } from './quill.interface';
-import QuillBetterTable from 'quill-better-table';
+// import QuillBetterTable from 'quill-better-table';
 import Quill from 'quill';
 import { PopoverDirective } from '../../core/directive/popover.directive';
 import { SafeHtmlPipe } from '../../core/pipes/safe-html.pipe';
@@ -42,7 +42,7 @@ import hljs from 'highlight.js';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 // import BlotFormatter from 'quill-blot-formatter';
-import ImageUploader from 'quill-image-uploader';
+// import ImageUploader from 'quill-image-uploader';
 // import { Mention, MentionBlot } from 'quill-mention';
 import { ThemeService } from '../../core/services/theme.service';
 
@@ -66,9 +66,9 @@ const links: { [key: string]: string } = {
 
 Quill.register(
   {
-    'modules/better-table': QuillBetterTable,
+    // 'modules/better-table': QuillBetterTable,
     // 'modules/blotFormatter': BlotFormatter,
-    'modules/imageUploader': ImageUploader,
+    // 'modules/imageUploader': ImageUploader,
     // 'blots/mention': MentionBlot,
     // 'modules/mention': Mention,
   },
@@ -343,15 +343,6 @@ export class Editor implements AfterContentInit, ControlValueAccessor {
         ...modules,
         syntax: { hljs },
         table: false,
-        'better-table': {
-        operationMenu: {
-          items: {
-            unmergeCells: {
-              text: 'Another unmerge cells name'
-            }
-          }
-        }
-      },
       },
       placeholder: this.placeholder,
       readOnly: this.readonly,
