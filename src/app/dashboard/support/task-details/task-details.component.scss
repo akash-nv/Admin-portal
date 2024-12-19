@@ -1,0 +1,22 @@
+::ng-deep {
+  .mat-mdc-menu-item .mat-icon {
+    margin: 0 !important
+  }
+
+  mat-select {
+    display: flex !important;
+  }
+}
+
+.todo-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff; /* Text color */
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.ticket_content-width {
+  max-width: calc(100% - 40px);
+}

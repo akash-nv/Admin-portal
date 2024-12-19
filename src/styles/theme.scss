@@ -1,0 +1,8 @@
+// @use 'sass:map';
+@use '@angular/material' as mat;
+@use './m3-theme.scss';
+
+$primary-color-40: mat.get-theme-color(m3-theme.$dark-theme, primary, 40);
+$primary-color-80: mat.get-theme-color(m3-theme.$dark-theme, primary, 80);
+$primary-color-90: mat.get-theme-color(m3-theme.$dark-theme, primary, 90);
+$primary-color-95: mat.get-theme-color(m3-theme.$dark-theme, primary, 95);

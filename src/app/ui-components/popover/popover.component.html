@@ -1,0 +1,6 @@
+<div class="max-w-[90vw]" [@fadeInOut]="animationState()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" (@fadeInOut.done)="onAnimationDone($event)">
+    <ng-container 
+    [ngTemplateOutlet]="template()"
+    [ngTemplateOutletContext]="{ data: data() }"
+    ></ng-container>
+</div>

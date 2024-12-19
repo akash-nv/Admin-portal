@@ -1,0 +1,118 @@
+<section class="bg-inherit">
+    <div class="max-w-4xl px-4 py-4 mx-auto lg:py-16">
+      <form>
+        <h2 class="mb-4 text-xl font-semibold leading-none text-gray-900 dark:text-gray-200">General Information</h2>
+        <div class="grid gap-3 mb-4 md:gap-4 md:grid-cols-2 sm:mb-8">
+          <div class="sm:col-span-2">
+            <div class="items-center w-full sm:flex">
+                <img class="w-20 h-20 mb-4 rounded-full sm:mr-4 sm:mb-0" src="https://media.licdn.com/dms/image/v2/C5103AQE1NORwaBg7YA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1575917183702?e=1736985600&v=beta&t=G6SikCvcrcC_F24418_ZJUKN9rzl-odzbXtTnblSn6E" alt="Helene avatar">
+                <div class="w-full">
+                    <label class="mt-1 mb-1 text-sm font-medium text-gray-600 dark:text-gray-300">Upload avatar</label>
+                    <input class="w-full text-sm text-gray-900 border dark:border-gray-400/30 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file">
+                    <p class="mt-1 text-xs font-normal text-gray-500 dark:text-gray-300">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+                </div>
+            </div>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>First Name</mat-label>
+              <input matInput type="text" placeholder="Ex. John" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Last Name</mat-label>
+              <input matInput type="text" placeholder="Ex. Doe" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" placeholder="Ex. name@company.com" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Phone Number</mat-label>
+              <input matInput type="number" placeholder="Add a phone number" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>User Role</mat-label>
+              <mat-select>
+                <mat-option value="Owner">Owner</mat-option>
+                <mat-option value="Admin">Admin</mat-option>
+                <mat-option value="Editor">Editor</mat-option>
+                <mat-option value="Contributor">Contributor</mat-option>
+                <mat-option value="Viewer">Viewer</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Account</mat-label>
+              <mat-select>
+                <mat-option value="PRO Account" selected>PRO Account</mat-option>
+                <mat-option value="Default Account">Default Account</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" placeholder="•••••••••" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Confirm Password</mat-label>
+              <input matInput type="password" placeholder="•••••••••" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Country</mat-label>
+              <mat-select>
+                <!-- Add options dynamically -->
+                <mat-option value="USA">USA</mat-option>
+                <mat-option value="Canada">Canada</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>City</mat-label>
+              <mat-select>
+                <!-- Add options dynamically -->
+                <mat-option value="Newark">Newark</mat-option>
+                <mat-option value="Toronto">Toronto</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Address</mat-label>
+              <input matInput type="text" placeholder="Your Location" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>ZIP</mat-label>
+              <input matInput type="number" placeholder="ZIP" />
+            </mat-form-field>
+          </div>
+          <!-- Add other fields following the same structure -->
+        </div>
+        <div class="col-span-full">
+          <button mat-flat-button class="float-right">
+            Save Changes
+          </button>
+          <button mat-stroked-button class="float-right mr-2">
+            Back
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  

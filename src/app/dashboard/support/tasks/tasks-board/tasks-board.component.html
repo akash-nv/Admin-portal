@@ -1,0 +1,100 @@
+<div class="grid grid-flow-col auto-cols-max gap-4 px-2 sm:px-0 pb-2 h-full overflow-y-auto overflow-x-auto"  cdkDropListGroup>
+    <!-- Column 1: Todo List -->
+    @for (grp of groups(); track $index) {
+      <div
+        cdkDropList
+        [cdkDropListData]="grp.tasks"
+        (cdkDropListDropped)="drop($event)"
+        class="{{grp.collapsed ? 'w-11': 'w-72'}} flex flex-col bg-gray-100 dark:bg-gray-800 shadow rounded-lg py-2 overflow-y-auto duration-300">
+        <div
+          class="flex mb-2 justify-between items-center px-2 transition-all duration-300 origin-bottom-left"
+          [ngClass]="{'rotate-90 -translate-y-10 translate-x-[6px]': grp.collapsed}">
+          <h3 class="text-sm font-semibold whitespace-nowrap py-1 px-1.5 rounded-md cursor-pointer border"
+          [class]="taskStatus[grp.title]"
+             [style]="{color : grp.color, background: grp.bgColor, borderColor: grp.borderColor}">{{grp.title| uppercase}} {{grp.tasks.length}}</h3>
+          <div class="flex">
+            <div class="flex items-center rounded-full p-1" matRipple [matRippleCentered]="true">
+              <mat-icon class="material-symbols-rounded" [class.-rotate-90]="grp.collapsed" [matTooltip]="grp.collapsed ? 'Expand Group' : 'Collapse Group' " (click)="grp.collapsed = !grp.collapsed">{{grp.collapsed ? 'arrow_menu_open' : 'arrow_menu_close'}}</mat-icon>
+            </div>
+            <div class="flex items-center rounded-full p-1" matRipple [matRippleCentered]="true">
+              <mat-icon class="material-symbols-rounded" matTooltip="Add Ticket">add_circle</mat-icon>
+            </div>
+          </div>
+        </div>
+        <!-- Task Card -->
+        @if (!grp.collapsed) {
+          <div class="flex flex-col flex-1 overflow-y-auto px-2 scroll-container">
+            @for (task of grp.tasks; track $index) {
+              <div cdkDrag class="bg-white dark:bg-gray-900 p-4 rounded-lg mb-4 cursor-pointer relative group" (click)="goToTaskDetails()">
+                <p class="text-sm font-semibold mb-2">Search inspirations for upcoming project</p>
+                <div class="flex space-x-2 mb-2">
+                  <span class="text-sm px-2.5 py-0.5 rounded font-semibold" [class]="taskStatus[grp.title]">#website</span>
+                  <span class="text-sm px-2.5 py-0.5 rounded font-semibold" [class]="taskStatus[grp.title]">#client</span>
+                </div>
+                <!-- <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                                <div class="bg-{{taskStatus[grp.title]}}-500 h-2 rounded-full" style="width: 40%"></div>
+                                            </div> -->
+                <div class="flex items-center justify-between space-x-2">
+                  <div class="flex -space-x-2">
+                    <img class="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
+                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/avatar-10.png" alt="Avatar">
+                    <img class="w-6 h-6 rounded-full border-2 border-white dark:border-gray-800"
+                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/avatar-1.png" alt="Avatar">
+                  </div>
+                  <div class="text-gray-500 text-base flex gap-x-2">
+                    <div class="flex items-center"><mat-icon class="material-symbols-rounded">attachment</mat-icon><span class="ms-0.5">8</span></div>
+                    <div class="flex items-center"><mat-icon class="material-symbols-rounded">comment</mat-icon><span class="ms-0.5">8</span></div>
+                  </div>
+                </div>
+                <div class="p-0.5 hidden group-hover:flex absolute top-1 right-1 shadow border border-gray-900/10 dark:border-gray-400/30 rounded-lg bg-white dark:bg-gray-800" (click)="$event.stopPropagation()">
+                  <button [matMenuTriggerFor]="ticketMenu" mat-ripple class="h-7 w-7 items-center flex justify-center rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <mat-icon class="material-symbols-rounded">more_horiz</mat-icon>
+                  </button>
+
+                  <mat-menu #ticketMenu="matMenu" [xPosition]="'before'">
+                    <button
+                      mat-menu-item
+                    >
+                      <mat-icon class="material-symbols-rounded"
+                        >link</mat-icon
+                      >
+                      <span>Copy Link</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                    >
+                      <mat-icon class="material-symbols-rounded"
+                        >content_copy</mat-icon
+                      >
+                      <span>Copy ID</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                    >
+                      <mat-icon class="material-symbols-rounded"
+                        >archive</mat-icon
+                      >
+                      <span>Archive</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                    >
+                      <mat-icon color="warn" class="material-symbols-rounded"
+                        >delete</mat-icon
+                      >
+                      <span>Delete</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <!-- Add more task cards as needed -->
+      </div>
+    }
+    <div>
+      <button mat-flat-button class="h-6"> <mat-icon class="material-symbols-rounded">add_circle</mat-icon> Add
+        Group</button>
+    </div>
+  </div>

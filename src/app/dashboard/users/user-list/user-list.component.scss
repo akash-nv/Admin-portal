@@ -1,0 +1,9 @@
+@import '../../../../styles/theme.scss';
+
+.bg-40-blue{
+    background: $primary-color-40;
+    mat-icon {
+        height: 48px;
+        width: 48px;
+    }
+}

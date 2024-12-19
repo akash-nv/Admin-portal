@@ -1,0 +1,13 @@
+@import '../../../styles/theme.scss';
+
+a {
+  &.current {
+    background: $primary-color-40;
+    color: white;
+    box-shadow: $primary-color-40 0px 0px 0px 0px inset, ;
+  }
+}
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

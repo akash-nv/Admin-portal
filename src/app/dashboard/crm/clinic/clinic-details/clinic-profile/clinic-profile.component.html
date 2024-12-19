@@ -1,0 +1,182 @@
+<div class="flex-1 overflow-y-auto">
+  <div class="flex items-center justify-between">
+    <div
+      class="relative flex items-center space-x-3 rounded-lg px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+    >
+      <div class="flex-shrink-0">
+        <img
+          class="h-14 w-14 rounded-full"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          alt=""
+        />
+      </div>
+      <div class="min-w-0 flex-1">
+        <div>
+          <h2
+            id="applicant-information-title"
+            class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-200"
+          >
+            {{ clinicData().clinicName }}
+          </h2>
+          <span
+            class="text-sm font-medium px-2.5 py-0.5 rounded"
+            [class]="CustomerStatus[clinicData().status]"
+            >{{ clinicData().status | titlecase }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="hidden sm:flex">
+      <button
+        mat-fab
+        extended
+        class="mr-2"
+        (click)="openDialog(verifyOTP, clinicData())"
+      >
+        <mat-icon
+          [color]="clinicData().activate ? 'warn' : 'primary'"
+          class="material-symbols-rounded"
+          >{{ clinicData().activate ? "block" : "task_alt" }}</mat-icon
+        >
+        <span class="font-semibold">{{
+          clinicData().activate ? "Deactivate" : "Activate"
+        }}</span>
+      </button>
+      <button mat-fab extended class="mr-2">
+        <mat-icon class="material-symbols-rounded">login</mat-icon>
+        <span class="font-semibold">Login to CP</span>
+      </button>
+    </div>
+    <div class="flex sm:hidden">
+      <button
+        mat-mini-fab
+        class="mr-2"
+        (click)="openDialog(verifyOTP, clinicData())"
+        [matTooltip]="clinicData().activate ? 'Deactivate' : 'Activate'"
+      >
+        <mat-icon
+          [color]="clinicData().activate ? 'warn' : 'primary'"
+          class="material-symbols-rounded"
+          >{{ clinicData().activate ? "block" : "task_alt" }}</mat-icon
+        >
+      </button>
+      <button mat-mini-fab class="mr-2" matTooltip="Login to CP">
+        <mat-icon class="material-symbols-rounded">login</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="border-t border-gray-900/10 dark:border-gray-400/30 px-4 py-5 sm:px-6">
+    <dl class="grid grid-cols-1 gap-y-5 gap-x-4 sm:gap-y-8 sm:grid-cols-3">
+      @if(clinicData().csiSense.strValue === 'Needs attention') {
+      <div class="col-span-full">
+        <div
+          class="flex items-start p-4 text-sm shadow text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          role="alert"
+        >
+          <button>
+            <mat-icon color="warn" class="material-symbols-rounded me-3"
+              >info</mat-icon
+            >
+          </button>
+          <span class="sr-only">Danger</span>
+          <div>
+            <span class="font-semibold text-base">{{
+              clinicData().csiSense.strValue
+            }}</span>
+            <ul class="mt-1.5 list-disc list-inside">
+              @for(item of clinicData().csiSense.attentionItems; track item) {
+              <li>{{ item.message }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+      }
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Owner</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">{{ clinicData().mainUser }}</dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Billing</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">{{ clinicData().billing }}</dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Phone</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ clinicData().contactInfo.phone }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Email</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ clinicData().contactInfo.email }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Address</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ clinicData().contactInfo.address }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Created on</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ clinicData().dateCreated | date : "mediumDate" }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Location</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">San Francisco</dd>
+      </div>
+      <div class="col-span-full">
+        <dt class="text-sm font-medium text-gray-500">About</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt
+          cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint.
+          Sit id mollit nulla mollit nostrud in ea officia proident. Irure
+          nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<ng-template #verifyOTP let-data>
+  <div style="display: flex" mat-dialog-title>
+    <div class="flex items-center mt-2">
+      <img
+        alt=""
+        class="h-10 w-8"
+        src="https://plugins.miniorange.com/wp-content/uploads/2023/03/microsoft_authenticator.webp"
+      />
+      <h2 class="w-fit ms-3">OTP Verification</h2>
+    </div>
+  </div>
+  <mat-dialog-content class="mat-typography">
+    <p class="mb-2">
+      Are you sure, you want to {{ data.activate ? "Deactivate" : "Activate" }}
+      <strong>{{ data.firstName }}</strong
+      >?
+    </p>
+    <p class="text-center text-gray-400 mb-4">
+      Enter OTP from your Microsoft authenticator.
+    </p>
+    <app-otp-input></app-otp-input>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      (click)="changeStatu(data.id)"
+      mat-flat-button
+      [color]="data.activate ? 'warn' : 'primary'"
+      [disabled]="isSavingRecord()"
+    >
+      @if (isSavingRecord()) {
+      <mat-icon>
+        <mat-spinner [diameter]="18"></mat-spinner>
+      </mat-icon>
+      }
+      {{ data.activate ? "Deactivate" : "Activate" }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>

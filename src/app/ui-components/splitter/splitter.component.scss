@@ -1,0 +1,68 @@
+.splitter {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.splitter-vertical {
+    flex-direction: column;
+}
+
+.splitter-panel {
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.splitter-panel-nested {
+    display: flex;
+    min-width: 0;
+}
+
+.splitter-panel p-splitter {
+    flex-grow: 1;
+}
+
+.splitter-panel .p-splitter {
+    flex-grow: 1;
+    border: 0 none;
+}
+
+.splitter-gutter {
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: col-resize;
+}
+
+.splitter-horizontal.splitter-resizing {
+    cursor: col-resize;
+    user-select: none;
+}
+
+.splitter-horizontal > .splitter-gutter > .splitter-gutter-handle {
+    height: 4px;
+    width: 100%;
+}
+
+.splitter-horizontal > .splitter-gutter {
+    cursor: col-resize;
+}
+
+.splitter-vertical.splitter-resizing {
+    cursor: row-resize;
+    user-select: none;
+}
+
+.splitter-vertical > .splitter-gutter {
+    cursor: row-resize;
+}
+
+.splitter-vertical > .splitter-gutter > .splitter-gutter-handle {
+    width: 4px;
+    height: 100%;
+}
+
+.splitter-resizing .splitter-panel {
+    pointer-events: none;
+}

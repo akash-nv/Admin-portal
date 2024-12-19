@@ -1,0 +1,204 @@
+<div class="flex-1 overflow-y-auto">
+  <div class="flex items-center justify-between">
+    <div
+      class="relative flex items-center space-x-3 rounded-lg px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+    >
+      <div class="flex-shrink-0">
+        <img
+          class="h-14 w-14 rounded-full"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          alt=""
+        />
+      </div>
+      <div class="min-w-0 flex-1">
+        <div>
+          <h2
+            id="applicant-information-title"
+            class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-200"
+          >
+            {{ customerData().mainDoctor }}
+          </h2>
+          <span
+            class="text-sm font-medium px-2.5 py-0.5 rounded"
+            [class]="CustomerStatus[customerData().status]"
+            >{{ customerData().status | titlecase }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="hidden sm:flex gap-x-2">
+      <button (click)="isEdit.set(!isEdit())" mat-fab extended class="mr-2">
+        <mat-icon class="material-symbols-rounded">edit</mat-icon>
+        <span class="font-semibold">Edit</span>
+      </button>
+      <a [routerLink]="['/', 'CRM', 'clinics']" mat-fab extended class="mr-2">
+        <mat-icon class="material-symbols-rounded">tab_new_right</mat-icon>
+        <span class="font-semibold">Clinics</span>
+      </a>
+    </div>
+    <div class="flex sm:hidden">
+      <button
+        (click)="isEdit.set(!isEdit())"
+        mat-mini-fab
+        class="mr-2"
+        matTooltip="Edit"
+      >
+        <mat-icon class="material-symbols-rounded">edit</mat-icon>
+      </button>
+      <a
+        [routerLink]="['/', 'CRM', 'clinics']"
+        mat-mini-fab
+        class="mr-2"
+        matTooltip="Clinics"
+      >
+        <mat-icon class="material-symbols-rounded">tab_new_right</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div class="border-t border-gray-900/10 dark:border-gray-400/30 px-4 py-5 sm:px-6 relative">
+    <dl class="grid grid-cols-1 gap-y-4 gap-x-4 sm:gap-y-6 sm:grid-cols-3">
+      @if(customerData().csiSense.strValue === 'Needs attention') {
+      <div class="col-span-full">
+        <div
+          class="flex items-start p-4 text-sm shadow text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          role="alert"
+        >
+          <button>
+            <mat-icon color="warn" class="material-symbols-rounded me-3"
+              >info</mat-icon
+            >
+          </button>
+          <span class="sr-only">Danger</span>
+          <div>
+            <span class="font-semibold text-base">{{
+              customerData().csiSense.strValue
+            }}</span>
+            <ul class="mt-1.5 list-disc list-inside">
+              @for(item of customerData().csiSense.attentionItems; track item) {
+              <li>{{ item.message }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+      } @if(!isEdit()) {
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Phone</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().contactInfo.phone }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Email</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().contactInfo.email }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Address</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().contactInfo.address }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Paid clinics</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().paidClinicCount }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Unpaid clinics</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().unpaidClinicCount }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Created on</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          {{ customerData().dateCreated | date : "mediumDate" }}
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Location</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">San Francisco</dd>
+      </div>
+      <div class="col-span-full">
+        <dt class="text-sm font-medium text-gray-500">About</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-gray-200">
+          Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt
+          cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint.
+          Sit id mollit nulla mollit nostrud in ea officia proident. Irure
+          nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.
+        </dd>
+      </div>
+      } @else {
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Main doctor</dt>
+        <dd class="mt-1">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >person</mat-icon
+            >
+            <input type="text" matInput placeholder="name" />
+          </mat-form-field>
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Phone</dt>
+        <dd class="mt-1">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >call</mat-icon
+            >
+            <input type="text" matInput placeholder="+919409483951" />
+          </mat-form-field>
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Email</dt>
+        <dd class="mt-1">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >email</mat-icon
+            >
+            <input type="text" matInput placeholder="name@example.com" />
+          </mat-form-field>
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Address</dt>
+        <dd class="mt-1 text-sm text-gray-900">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >location_on</mat-icon
+            >
+            <input type="text" matInput placeholder="address" />
+          </mat-form-field>
+        </dd>
+      </div>
+      <div class="col-span-full sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500">Location</dt>
+        <dd class="mt-1 text-sm text-gray-900">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >location_on</mat-icon
+            >
+            <input type="text" matInput placeholder="location" />
+          </mat-form-field>
+        </dd>
+      </div>
+      <div class="col-span-full">
+        <dt class="text-sm font-medium text-gray-500">About</dt>
+        <dd class="mt-1 text-sm text-gray-900">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >lightbulb</mat-icon
+            >
+            <textarea type="text" matInput placeholder="about"></textarea>
+          </mat-form-field>
+        </dd>
+      </div>
+      }
+    </dl>
+  </div>
+</div>

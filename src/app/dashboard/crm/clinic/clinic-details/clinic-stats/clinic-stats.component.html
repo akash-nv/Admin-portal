@@ -1,0 +1,590 @@
+<div class="relative h-full flex flex-col overflow-y-auto px-2 sm:px-4">
+  @if(clinicData().csiSense.strValue === 'Needs attention') {
+  <div
+    class="flex items-start p-4 text-sm shadow text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 my-3"
+    role="alert"
+  >
+    <button>
+      <mat-icon color="warn" class="material-symbols-rounded me-3"
+        >info</mat-icon
+      >
+    </button>
+    <span class="sr-only">Danger</span>
+    <div>
+      <span class="font-semibold text-base">{{
+        clinicData().csiSense.strValue
+      }}</span>
+      <ul class="mt-1.5 list-disc list-inside">
+        @for(item of clinicData().csiSense.attentionItems; track item) {
+        <li>{{ item.message }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+  }
+
+  <div class="flex-1 pr-1">
+    <div class="sticky top-0 bg-[#f9f9ff] dark:bg-[#10131a] left-0 z-10 px-2 pb-3 pt-3 justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 flex mb-4">
+      <button mat-flat-button [matMenuTriggerFor]="jumpTo">
+        <div class="flex items-center whitespace-nowrap">
+            <span class="text-sm">Jump to Section</span>
+            <mat-icon class="material-symbols-rounded">arrow_drop_down</mat-icon>
+        </div>
+      </button>
+
+      <div
+          class="w-auto hidden lg:flex flex-row items-center justify-end space-x-3 flex-shrink-0"
+        >
+          <button type="submit" mat-flat-button (click)="filterDrawer.toggleDrawer()">
+            <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+            Filters
+          </button>
+        </div>
+
+        <div
+          class="w-auto flex lg:hidden flex-row items-center justify-end space-x-3 flex-shrink-0"
+        >
+          <button type="submit" mat-mini-fab (click)="filterDrawer.toggleDrawer()">
+            <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+          </button>
+        </div>
+    </div>
+  
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Clinical usage</h3>
+      <dl
+        class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
+        @for(item of usage; track item; let i = $index) {
+        <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+          <h3
+            class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200"
+          >
+            {{ item.title }}
+          </h3>
+          <dl
+            class="mt-3 pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            @for(tag of item.tags; track tag;) {
+            <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+              <dt class="flex justify-between">
+                <p class="truncate text-base font-medium text-gray-500">
+                  {{ tag.title }}
+                </p>
+                <div class="mt-1 sm:mt-0 flex justify-end">
+                  <button
+                    mat-icon-button
+                    matTooltip="{{ tag.description }}"
+                    class="text-gray-500"
+                  >
+                    <mat-icon class="material-symbols-rounded">info</mat-icon>
+                  </button>
+                </div>
+              </dt>
+              <dd
+                class="mt-1 flex items-baseline justify-between md:block lg:flex"
+              >
+                <div
+                  class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                >
+                  <span>{{ tag.value }}</span>
+                  <!-- <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                    <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500">{{tag.outOf}}</span> -->
+                </div>
+
+                @if(tag.comparison && tag.comparison.value !== null) {
+                <div
+                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0"
+                  [class.bg-green-100]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.bg-red-100]="tag.comparison.sentiment === 'negative'"
+                  [class.text-green-800]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.text-red-800]="tag.comparison.sentiment === 'negative'"
+                >
+                  <svg
+                    class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    [class.text-green-500]="
+                      tag.comparison.sentiment === 'positive' ||
+                      tag.comparison.sentiment === 'neutral'
+                    "
+                    [class.text-red-500]="tag.comparison.sentiment === 'negative'"
+                    aria-hidden="true"
+                    data-slot="icon"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      [attr.d]="
+                        tag.comparison.sentiment === 'negative'
+                          ? 'M10 5a.75.75 0 0 1 .75.75v11.69l4.22-4.22a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 1.06-1.06l4.22 4.22V5.75A.75.75 0 0 1 10 5Z'
+                          : 'M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z'
+                      "
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  {{ tag.comparison.value }}{{ tag.comparison.unit }}
+                </div>
+                }
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">User activity</h3>
+      <dl
+        class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
+        @for(item of userActivity; track item; let i = $index) {
+        <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+          <h3
+            class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200"
+          >
+            {{ item.title }}
+          </h3>
+          <dl
+            class="mt-3 pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            @for(tag of item.tags; track tag) {
+            <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+              <dt class="flex justify-between">
+                <p class="truncate text-base font-medium text-gray-500">
+                  {{ tag.title }}
+                </p>
+                <div class="mt-1 sm:mt-0 flex justify-end">
+                  <button
+                    mat-icon-button
+                    matTooltip="{{ tag.description }}"
+                    class="text-gray-500"
+                  >
+                    <mat-icon class="material-symbols-rounded">info</mat-icon>
+                  </button>
+                </div>
+              </dt>
+              <dd
+                class="mt-1 flex items-baseline justify-between md:block lg:flex"
+              >
+                <div
+                  class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                >
+                  <span>{{ tag.value }}</span>
+                  <!-- <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                    <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500">{{tag.outOf}}</span> -->
+                </div>
+
+                @if(tag.comparison && tag.comparison.value !== null) {
+                <div
+                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0"
+                  [class.bg-green-100]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.bg-red-100]="tag.comparison.sentiment === 'negative'"
+                  [class.text-green-800]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.text-red-800]="tag.comparison.sentiment === 'negative'"
+                >
+                  <svg
+                    class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    [class.text-green-500]="
+                      tag.comparison.sentiment === 'positive' ||
+                      tag.comparison.sentiment === 'neutral'
+                    "
+                    [class.text-red-500]="tag.comparison.sentiment === 'negative'"
+                    aria-hidden="true"
+                    data-slot="icon"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      [attr.d]="
+                        tag.comparison.sentiment === 'negative'
+                          ? 'M10 5a.75.75 0 0 1 .75.75v11.69l4.22-4.22a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 1.06-1.06l4.22 4.22V5.75A.75.75 0 0 1 10 5Z'
+                          : 'M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z'
+                      "
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  {{ tag.comparison.value }}{{ tag.comparison.unit }}
+                </div>
+                }
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Patient communication</h3>
+      <dl
+        class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
+        @for(item of patientCommunication; track item; let i = $index) {
+        <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+          <h3
+            class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200"
+          >
+            {{ item.title }}
+          </h3>
+          <dl
+            class="mt-3 pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            @for(tag of item.tags; track tag) {
+            <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+              <dt class="flex justify-between">
+                <p class="truncate text-base font-medium text-gray-500">
+                  {{ tag.title }}
+                </p>
+                <div class="mt-1 sm:mt-0 flex justify-end">
+                  <button
+                    mat-icon-button
+                    matTooltip="{{ tag.description }}"
+                    class="text-gray-500"
+                  >
+                    <mat-icon class="material-symbols-rounded">info</mat-icon>
+                  </button>
+                </div>
+              </dt>
+              <dd
+                class="mt-1 flex items-baseline justify-between md:block lg:flex"
+              >
+                <div
+                  class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                >
+                  <span>{{ tag.value }}</span>
+                  <!-- <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                    <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500">{{tag.outOf}}</span> -->
+                </div>
+
+                @if(tag.comparison && tag.comparison.value !== null) {
+                <div
+                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0"
+                  [class.bg-green-100]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.bg-red-100]="tag.comparison.sentiment === 'negative'"
+                  [class.text-green-800]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.text-red-800]="tag.comparison.sentiment === 'negative'"
+                >
+                  <svg
+                    class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    [class.text-green-500]="
+                      tag.comparison.sentiment === 'positive' ||
+                      tag.comparison.sentiment === 'neutral'
+                    "
+                    [class.text-red-500]="tag.comparison.sentiment === 'negative'"
+                    aria-hidden="true"
+                    data-slot="icon"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      [attr.d]="
+                        tag.comparison.sentiment === 'negative'
+                          ? 'M10 5a.75.75 0 0 1 .75.75v11.69l4.22-4.22a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 1.06-1.06l4.22 4.22V5.75A.75.75 0 0 1 10 5Z'
+                          : 'M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z'
+                      "
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  {{ tag.comparison.value }}{{ tag.comparison.unit }}
+                </div>
+                }
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">
+        Questionnaire activity
+      </h3>
+      <dl
+        class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
+        @for(item of questionnaireActivity; track item; let i = $index) {
+        <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+          <h3
+            class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200"
+          >
+            {{ item.title }}
+          </h3>
+          <dl
+            class="mt-3 pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            @for(tag of item.tags; track tag) {
+            <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+              <dt class="flex justify-between">
+                <p class="truncate text-base font-medium text-gray-500">
+                  {{ tag.title }}
+                </p>
+                <div class="mt-1 sm:mt-0 flex justify-end">
+                  <button
+                    mat-icon-button
+                    matTooltip="{{ tag.description }}"
+                    class="text-gray-500"
+                  >
+                    <mat-icon class="material-symbols-rounded">info</mat-icon>
+                  </button>
+                </div>
+              </dt>
+              <dd
+                class="mt-1 flex items-baseline justify-between md:block lg:flex"
+              >
+                <div
+                  class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                >
+                  <span>{{ tag.value }}</span>
+                  <!-- <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                    <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500">{{tag.outOf}}</span> -->
+                </div>
+
+                @if(tag.comparison && tag.comparison.value !== null) {
+                <div
+                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0"
+                  [class.bg-green-100]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.bg-red-100]="tag.comparison.sentiment === 'negative'"
+                  [class.text-green-800]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.text-red-800]="tag.comparison.sentiment === 'negative'"
+                >
+                  <svg
+                    class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    [class.text-green-500]="
+                      tag.comparison.sentiment === 'positive' ||
+                      tag.comparison.sentiment === 'neutral'
+                    "
+                    [class.text-red-500]="tag.comparison.sentiment === 'negative'"
+                    aria-hidden="true"
+                    data-slot="icon"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      [attr.d]="
+                        tag.comparison.sentiment === 'negative'
+                          ? 'M10 5a.75.75 0 0 1 .75.75v11.69l4.22-4.22a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 1.06-1.06l4.22 4.22V5.75A.75.75 0 0 1 10 5Z'
+                          : 'M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z'
+                      "
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  {{ tag.comparison.value }}{{ tag.comparison.unit }}
+                </div>
+                }
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Assessment activity</h3>
+      <dl
+        class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+      >
+        @for(item of assessmentActivity; track item; let i = $index) {
+        <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+          <h3
+            class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200"
+          >
+            {{ item.title }}
+          </h3>
+          <dl
+            class="mt-3 pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            @for(tag of item.tags; track tag) {
+            <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+              <dt class="flex justify-between">
+                <p class="truncate text-base font-medium text-gray-500">
+                  {{ tag.title }}
+                </p>
+                <div class="mt-1 sm:mt-0 flex justify-end">
+                  <button
+                    mat-icon-button
+                    matTooltip="{{ tag.description }}"
+                    class="text-gray-500"
+                  >
+                    <mat-icon class="material-symbols-rounded">info</mat-icon>
+                  </button>
+                </div>
+              </dt>
+              <dd
+                class="mt-1 flex items-baseline justify-between md:block lg:flex"
+              >
+                <div
+                  class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                >
+                  <span>{{ tag.value }}</span>
+                  <!-- <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                    <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500">{{tag.outOf}}</span> -->
+                </div>
+
+                @if(tag.comparison && tag.comparison.value !== null) {
+                <div
+                  class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0"
+                  [class.bg-green-100]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.bg-red-100]="tag.comparison.sentiment === 'negative'"
+                  [class.text-green-800]="
+                    tag.comparison.sentiment === 'positive' ||
+                    tag.comparison.sentiment === 'neutral'
+                  "
+                  [class.text-red-800]="tag.comparison.sentiment === 'negative'"
+                >
+                  <svg
+                    class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    [class.text-green-500]="
+                      tag.comparison.sentiment === 'positive' ||
+                      tag.comparison.sentiment === 'neutral'
+                    "
+                    [class.text-red-500]="tag.comparison.sentiment === 'negative'"
+                    aria-hidden="true"
+                    data-slot="icon"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      [attr.d]="
+                        tag.comparison.sentiment === 'negative'
+                          ? 'M10 5a.75.75 0 0 1 .75.75v11.69l4.22-4.22a.75.75 0 1 1 1.06 1.06l-5.5 5.5a.75.75 0 0 1-1.06 0l-5.5-5.5a.75.75 0 0 1 1.06-1.06l4.22 4.22V5.75A.75.75 0 0 1 10 5Z'
+                          : 'M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z'
+                      "
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  {{ tag.comparison.value }}{{ tag.comparison.unit }}
+                </div>
+                }
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Support tickets</h3>
+      <dl class="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+        @for(item of ticketMatrix; track item) {
+        <app-matrics [data]="item"></app-matrics>
+        }
+      </dl>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Invoices</h3>
+      <dl class="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+        @for(item of invoiceMatrix; track item) {
+        <app-matrics [data]="item"></app-matrics>
+        }
+      </dl>
+    </div>
+
+    <app-responsive-drawer #filterDrawer> 
+      <div drawer-header class="p-3 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mb-4">
+        <h1 class="text-lg font-semibold">Filters</h1>
+        <mat-icon (click)="filterDrawer.toggleDrawer()" class="material-symbols-rounded">close</mat-icon>
+      </div>
+      <div class="flex-1 flex flex-col px-3 overflow-y-auto gap-y-3">
+        <mat-form-field class="hint-none" appearance="outline">
+          <mat-select>
+              <mat-option selected value="week">Week</mat-option>
+              <mat-option value="month">Month</mat-option>
+              <mat-option value="year">Year</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="hint-none" appearance="outline">
+            <mat-select>
+                <mat-option selected value="current">Current month</mat-option>
+                <mat-option value="dec">Dec 2024</mat-option>
+                <mat-option value="nov">Nov 2024</mat-option>
+                <mat-option value="oct">Oct 2024</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+          <mat-form-field class="hint-none w-full" appearance="outline">
+              <input type="text"
+                    placeholder="Search indicators..."
+                    aria-label="Number"
+                    matInput
+                    [formControl]="myControl"
+                    [matAutocomplete]="auto">
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                @for (option of filteredOptions | async; track option) {
+                  <mat-option [value]="option">{{option}}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="flex gap-x-2 items-center">
+            <p><mat-slide-toggle>Only -ve</mat-slide-toggle></p>
+            <p><mat-slide-toggle>Only +ve</mat-slide-toggle></p>
+            <p><mat-slide-toggle>YoY</mat-slide-toggle></p>
+        </div>
+      </div>
+      <div drawer-footer class="flex justify-end px-3 gap-x-3">
+        <button mat-button>Reset</button>
+        <button mat-flat-button>Apply</button>
+      </div>
+    </app-responsive-drawer>
+  </div>
+</div>
+
+<mat-menu #jumpTo="matMenu">
+  @for(option of options; track option) {
+    <button mat-menu-item>
+      {{option}}
+  </button>
+  }
+</mat-menu>

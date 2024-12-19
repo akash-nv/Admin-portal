@@ -1,0 +1,203 @@
+<div class="h-full flex flex-col p-1">
+    <div class="px-2 pb-2 justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mr-2 flex gap-2">
+        <button mat-flat-button [matMenuTriggerFor]="jumpTo">
+            <div class="flex items-center whitespace-nowrap">
+                <span class="text-sm">Jump to Section</span>
+                <mat-icon class="material-symbols-rounded">arrow_drop_down</mat-icon>
+            </div>
+          </button>
+    
+          <div
+              class="w-auto hidden lg:flex flex-row items-center justify-end space-x-3 flex-shrink-0"
+            >
+              <button type="submit" mat-flat-button (click)="filterDrawer.toggleDrawer()">
+                <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+                Filters
+              </button>
+            </div>
+    
+            <div
+              class="w-auto flex lg:hidden flex-row items-center justify-end space-x-3 flex-shrink-0"
+            >
+              <button type="submit" mat-mini-fab (click)="filterDrawer.toggleDrawer()">
+                <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+              </button>
+            </div>
+    </div>
+    <div class="flex-1 overflow-y-auto p-1">
+        <div>
+            <dl class="mt-2 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+                @for(item of tags; track item) {
+                <app-matrics [data]="item"></app-matrics>
+                }
+            </dl>
+            <div class="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 mt-4 px-3 py-3 shadow border border-gray-900/10 dark:border-gray-400/30 sm:px-3 sm:py-3">
+                    <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                        <div class="flex items-center">
+                            <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                        </div>
+                        <div class="mt-1 sm:mt-0 flex justify-end">
+                            <button mat-icon-button
+                                matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                class="text-gray-800 dark:text-gray-200">
+                                <mat-icon class="material-symbols-rounded">info</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="m-3 ml-0">
+                        <app-bar-chart class="w-full"></app-bar-chart>
+                    </div>
+            </div>
+            <div class="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 mt-4 px-3 py-3 shadow border border-gray-900/10 dark:border-gray-400/30 sm:px-3 sm:py-3">
+                <div>
+                    <dl
+                        class="grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 md:grid-cols-3 md:divide-x md:divide-y-0">
+                        <div>
+                            <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                                <div class="flex items-center">
+                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                                </div>
+                                <div class="mt-1 sm:mt-0 flex justify-end">
+                                    <button mat-icon-button
+                                        matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                        class="text-gray-800 dark:text-gray-200">
+                                        <mat-icon class="material-symbols-rounded">info</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <app-pie-chart></app-pie-chart>
+                        </div>
+                        <div>
+                            <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                                <div class="flex items-center">
+                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                                </div>
+                                <div class="mt-1 sm:mt-0 flex justify-end">
+                                    <button mat-icon-button
+                                        matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                        class="text-gray-800 dark:text-gray-200">
+                                        <mat-icon class="material-symbols-rounded">info</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <app-pie-chart></app-pie-chart>
+                        </div>
+                        <div>
+                            <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                                <div class="flex items-center">
+                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                                </div>
+                                <div class="mt-1 sm:mt-0 flex justify-end">
+                                    <button mat-icon-button
+                                        matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                        class="text-gray-800 dark:text-gray-200">
+                                        <mat-icon class="material-symbols-rounded">info</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <app-pie-chart></app-pie-chart>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+            <div class="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 mt-4 px-3 py-3 shadow border border-gray-900/10 dark:border-gray-400/30 sm:px-3 sm:py-3">
+                <div>
+                    <dl
+                        class="grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-300/10 overflow-hidden rounded-lg bg-white dark:bg-gray-900 md:grid-cols-2 md:divide-x md:divide-y-0">
+                        <div>
+                            <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                                <div class="flex items-center">
+                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                                </div>
+                                <div class="mt-1 sm:mt-0 flex justify-end">
+                                    <button mat-icon-button
+                                        matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                        class="text-gray-800 dark:text-gray-200">
+                                        <mat-icon class="material-symbols-rounded">info</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="m-3">
+                                <app-bar-chart></app-bar-chart>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="px-2 pb-2 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mx-2">
+                                <div class="flex items-center">
+                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Report Dashboard</div>
+                                </div>
+                                <div class="mt-1 sm:mt-0 flex justify-end">
+                                    <button mat-icon-button
+                                        matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard"
+                                        class="text-gray-800 dark:text-gray-200">
+                                        <mat-icon class="material-symbols-rounded">info</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="m-3">
+                                <app-bar-chart></app-bar-chart>
+                            </div>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-responsive-drawer #filterDrawer> 
+        <div drawer-header class="p-3 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mb-4">
+          <h1 class="text-lg font-semibold">Filters</h1>
+          <mat-icon (click)="filterDrawer.toggleDrawer()" class="material-symbols-rounded">close</mat-icon>
+        </div>
+        <div class="flex-1 flex flex-col px-3 overflow-y-auto gap-y-3">
+          <mat-form-field class="hint-none" appearance="outline">
+            <mat-select>
+                <mat-option selected value="week">Week</mat-option>
+                <mat-option value="month">Month</mat-option>
+                <mat-option value="year">Year</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field class="hint-none" appearance="outline">
+              <mat-select>
+                  <mat-option selected value="current">Current month</mat-option>
+                  <mat-option value="dec">Dec 2024</mat-option>
+                  <mat-option value="nov">Nov 2024</mat-option>
+                  <mat-option value="oct">Oct 2024</mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div>
+            <mat-form-field class="hint-none w-full" appearance="outline">
+                <input type="text"
+                      placeholder="Search indicators..."
+                      aria-label="Number"
+                      matInput
+                      [formControl]="myControl"
+                      [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  @for (option of filteredOptions | async; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+          </div>
+          <div class="flex gap-x-2 items-center">
+              <p><mat-slide-toggle>Only -ve</mat-slide-toggle></p>
+              <p><mat-slide-toggle>Only +ve</mat-slide-toggle></p>
+              <p><mat-slide-toggle>YoY</mat-slide-toggle></p>
+          </div>
+        </div>
+        <div drawer-footer class="flex justify-end px-3 gap-x-3">
+          <button mat-button>Reset</button>
+          <button mat-flat-button>Apply</button>
+        </div>
+      </app-responsive-drawer>
+</div>
+
+<mat-menu #jumpTo="matMenu">
+  @for(option of options; track option) {
+    <button mat-menu-item>
+      {{option}}
+  </button>
+  }
+</mat-menu>

@@ -1,0 +1,11 @@
+<mat-drawer class="responsive-drawer" [opened]="isMatDrawerOpen()" #drawer position="end" mode="side">
+    <ng-container *ngTemplateOutlet="drawerTempalte"></ng-container>
+</mat-drawer>
+
+<ng-template #drawerTempalte>
+    <div class="h-full flex flex-col pb-2 gap-3">
+        <ng-content select="drawer-header"></ng-content>
+        <ng-content></ng-content>
+        <ng-content select="drawer-footer"></ng-content>
+    </div>
+</ng-template>

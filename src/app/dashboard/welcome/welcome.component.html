@@ -1,0 +1,40 @@
+<div class="h-full flex flex-col">
+  <div class="flex-1 overflow-y-auto p-3">
+    @if(true) {
+    <div class="grid grid-cols-12 gap-4 mb-4">
+      @for(item of shortcuts; track item;) {
+      <div
+        class="xl:col-span-2 lg:col-span-3 md:col-span-4 sm:col-span-6 col-span-12"
+      >
+        <a [routerLink]="item.path" re>
+          <div
+            class="overflow-hidden module__card rounded-lg drop-shadow-md h-44 relative"
+            [class.bg-100-blue]="theme() !== 'dark'"
+            [class.bg-gray-800]="theme() == 'dark'"
+          >
+            <div
+              class="absolute top-2 right-2 font-semibold primary-text-color-40 rounded-full bg-blue-200 whitespace-nowrap label"
+            >
+              <mat-icon class="material-symbols-rounded mr-1">sell</mat-icon
+              >{{ item.tag | uppercase }}
+            </div>
+            <div
+              class="px-4 py-5 sm:p-6 h-full flex flex-col justify-center items-center primary-text-color-40"
+            >
+              <mat-icon class="material-symbols-rounded icon text-5xl">{{
+                item.icon
+              }}</mat-icon>
+              <p class="text-xl primary-text-color-40 text-center">
+                {{ item.title }}
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      }
+    </div>
+    } @if(false) {
+    <app-quill-editor [style]="{ height: '320px' }"></app-quill-editor>
+    }
+  </div>
+</div>

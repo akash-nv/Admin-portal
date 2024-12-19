@@ -1,0 +1,97 @@
+<div class="flex h-full flex-col overflow-y-auto px-2 py-5 sm:px-2">
+  <div class="mb-3">
+    <div class="flex flex-row items-center justify-between space-x-4">
+      <div class="w-full lg:w-2/3 flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center">
+        <form class="w-full sm:max-w-sm mb-0 flex-1 md:mr-4">
+          <label for="default-search" class="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0">search</mat-icon>
+            <input [formControl]="searchText" type="text" matInput placeholder="Search">
+          </mat-form-field>
+        </form>
+        <div class="flex items-center space-x-2">
+        </div>
+      </div>
+      <div
+        class="md:w-auto hidden sm:flex mb-3 md:mb-0 items-stretch justify-end space-y-2 flex-shrink-0">
+        <button (click)="addNote.set(!addNote())" mat-flat-button>
+          <mat-icon class="material-symbols-rounded">add_notes</mat-icon>
+          Add Note
+        </button>
+      </div>
+      <div
+        class="md:w-auto flex sm:hidden mb-3 md:mb-0 items-stretch justify-end space-y-2 flex-shrink-0">
+      <button (click)="addNote.set(!addNote())" mat-mini-fab>
+        <mat-icon class="material-symbols-rounded">add_notes</mat-icon>
+      </button>
+    </div>
+    </div>
+  </div>
+ 
+
+  <div class="flex-1 overflow-y-auto space-y-3 pe-1">
+    @if(addNote()) {
+      <div class="text-gray-800 flex items-center justify-center">
+        <!-- Read More Modal -->
+        <div class="border border-gray-900/10 dark:border-gray-400/30 p-4 rounded-2xl shadow w-full">
+          <!-- Back Button -->
+          <!-- Tag, Title, and Date -->
+          <div class="mb-2">
+            <span class="bg-gradient-to-r from-indigo-400 to-purple-500 px-3 py-1 text-xs rounded-full">Work</span>
+            <mat-form-field class="hint-none w-full mt-2" appearance="outline">
+              <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0">title</mat-icon>
+              <input type="text" matInput placeholder="Title">
+            </mat-form-field>
+          </div>
+          <!-- Note Content -->
+          <div
+            (click)="$event.stopPropagation()"
+            class="text-gray-500 leading-relaxed transition-all duration-300 overflow-ellipsis"
+          >
+            <app-quill-editor styleClass="min-h-24 border-gray-900/10 dark:border-gray-400/30 focus:ring-1 active:ring-1 focus-within:ring-1 focus:ring-blue-600 active:ring-blue-600 focus-within:ring-blue-600" theme="bubble"></app-quill-editor>
+          </div>
+          <!-- Action Buttons -->
+          <div class="flex justify-between mt-3">
+            <div class="space-x-1.5 text-gray-300">
+              <button mat-flat-button class="p-1 hover:text-blue-600 flex"><mat-icon
+                  class="material-symbols-rounded">edit</mat-icon> Save </button>
+              <button mat-button class="p-1 hover:text-red-600 flex" (click)="addNote.set(false)"> Cancel </button>
+            </div>
+            <!-- <button onclick="window.history.back()"
+              class="bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-2 text-sm rounded-full hover:opacity-90 transition">Close</button> -->
+          </div>
+        </div>
+      </div>
+    }
+    @for(item of [1,2,3,4,5,6,7,8,9,0]; track item; let i = $index) {
+      <div class="text-gray-800 dark:text-gray-200 flex items-center justify-center">
+
+        <!-- Read More Modal -->
+        <div class="border border-gray-900/10 dark:border-gray-400/30 p-4 rounded-2xl shadow w-full" (click)="isEdit = !isEdit">
+          <!-- Back Button -->
+          <!-- Tag, Title, and Date -->
+          <div class="mb-2">
+            <span class="bg-gradient-to-r from-indigo-400 to-purple-500 px-3 py-1 text-xs rounded-full">Work</span>
+            <h2 class="text-2xl font-bold mt-2">Creative Brainstorming Ideas {{i+1}}</h2>
+            <div class="flex items-center">
+              <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/avatar-10.png" alt="iMac Front Image" class="w-auto h-6 mr-3 rounded-full">
+              Jese Leos <span class="text-sm text-gray-500 ml-3">Last edited: 3 days ago</span>
+          </div>
+          </div>
+          <!-- Note Content -->
+          <div
+            (click)="isEdit ? $event.stopPropagation(): ''"
+            class="text-gray-500 leading-relaxed transition-all duration-300 overflow-ellipsis"
+            [@expandCollapse]="isEdit ? 'expanded' : 'collapsed'"
+          >
+            <app-quill-editor [ngModel]="data" theme="bubble" [readonly]="!isEdit" [styleClass]="!isEdit ? 'border-none' : ''"></app-quill-editor>
+          </div>
+          <!-- Action Buttons -->
+        </div>
+    
+      </div>
+    }
+  </div>
+</div>
+
+ 

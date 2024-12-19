@@ -1,0 +1,53 @@
+<div class="border-b">
+    <div class="flex flex-col md:flex-row justify-between md:space-x-4 p-2">
+         <div class="flex flex-row mb-3 md:mb-0 items-stretch md:items-center md:space-x-3 flex-shrink-0">
+             <div class="w-full flex items-center justify-start">
+                 <button class="mr-3" mat-mini-fab (click)="goBack()" [matTooltip]="'Go back'">
+                     <mat-icon class="material-symbols-rounded">arrow_back</mat-icon>
+                 </button>
+                 <div class="font-semibold text-gray-600">User's Assigment</div>
+             </div>
+         </div>
+         <div class="w-full lg:w-2/3 flex flex-row space-y-0 space-x-3 md:flex-row justify-end">
+             <form class="w-full md:max-w-sm flex-1 mb-0">
+             <label for="default-search" class="text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+             <mat-form-field class="hint-none w-full" appearance="outline">
+                 <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0">search</mat-icon>
+                 <input [formControl]="search" type="text" matInput placeholder="Search">
+             </mat-form-field>
+             </form>
+             <div class="flex items-center">
+             <div>
+                 <button mat-mini-fab (click)="toggle()" [matTooltip]="isExpandedAll() ? 'Collapse All' : 'Expand All'">
+                     <mat-icon class="material-symbols-rounded"> {{isExpandedAll() ? 'collapse_all' : 'expand_all'}} All</mat-icon>
+                 </button>
+             </div>
+             </div>
+         </div>
+     </div>
+ </div>
+ <div class="flex-1 overflow-y-auto mt-3 pr-2 pl-0.5 pb-0.5">
+     <mat-accordion class="example-headers-align" multi>
+         @for (customer of customers(); track $index) {
+             <mat-expansion-panel>
+                 <mat-expansion-panel-header>
+                     <mat-panel-title>
+                         <mat-slide-toggle (click)="$event.preventDefault(); $event.stopPropagation()" (keydown.enter)="isChecked != isChecked" [(ngModel)]="customer.isChecked"></mat-slide-toggle>
+                         <span class="text-base ms-2 font-medium"> {{customer.customerName}} </span>
+                     </mat-panel-title>
+                 </mat-expansion-panel-header>   
+                 <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-full">
+                        <mat-checkbox class="example-margin" [(ngModel)]="customer.allNowAndFuture">All now and in future</mat-checkbox>
+                        <mat-checkbox class="example-margin" [(ngModel)]="customer.allNow">All now</mat-checkbox>
+                    </div>
+                     @for (clinic of customer.clinics; track $index) {
+                         <div class="xl:col-span-2 lg:col-span-3 sm:col-span-4 col-span-6">
+                             <mat-checkbox class="example-margin" [(ngModel)]="clinic.isChecked">{{clinic.clinicName}}</mat-checkbox>
+                         </div>
+                     }
+                 </div>
+             </mat-expansion-panel>
+         }
+     </mat-accordion>
+ </div>

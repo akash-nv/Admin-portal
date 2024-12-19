@@ -1,0 +1,224 @@
+<div class="h-full flex flex-col">
+  <div class="border-b border-gray-900/10 dark:border-gray-400/30">
+    <div
+      class="flex flex-row items-center justify-between space-x-2 p-2"
+    >
+      <div
+        class="w-auto lg:w-2/3 flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center"
+      >
+        <form class="w-full md:max-w-sm mb-0 flex-1 md:mr-4">
+          <label
+            for="default-search"
+            class="text-sm font-medium text-gray-900 sr-only dark:text-white"
+            >Search</label
+          >
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >search</mat-icon
+            >
+            <input
+              [formControl]="searchText"
+              type="text"
+              matInput
+              placeholder="Search"
+            />
+          </mat-form-field>
+        </form>
+      </div>
+      <div
+        class="hidden lg:flex flex-row items-stretch justify-end flex-shrink-0 space-x-2"
+      >
+        <button type="submit" mat-flat-button (click)="filterDrawer.toggleDrawer()">
+          <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+          Filters
+        </button>
+        <button (click)="download()" type="submit" mat-flat-button>
+          <mat-icon class="material-symbols-rounded">download</mat-icon>
+          Export
+        </button>
+        </div>
+        <div
+        class="flex lg:hidden flex-row items-stretch justify-end flex-shrink-0 space-x-2"
+      >
+        <button type="submit" mat-mini-fab (click)="filterDrawer.toggleDrawer()">
+          <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+        </button>
+        <button (click)="download()" type="submit" mat-mini-fab>
+          <mat-icon class="material-symbols-rounded">download</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="flex-1 sm:overflow-y-auto overflow-x-hidden">
+    <div class="relative h-full flex flex-col">
+      @if (isLoadingResults() || (!data().length && !isLoadingResults())) {
+      <div
+        class="absolute flex items-center justify-center bottom-14 top-0 left-0 right-0 z-10 backdrop-blur-sm"
+      >
+        @if (isLoadingResults()) {
+        <div class="w-full flex justify-center items-center h-full">
+          <mat-spinner></mat-spinner>
+        </div>
+        } @if (!data().length && !isLoadingResults()) {
+        <app-no-data-found [title]="'audit'"></app-no-data-found>
+        }
+      </div>
+      }
+
+      <div class="relative flex-1 overflow-auto">
+        <table mat-table [dataSource]="data()" class="w-full bg-white">
+          <!-- Number Column -->
+          <ng-container matColumnDef="User">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              <span class="font-semibold">User</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <div>{{ row.userInfo.personName }}</div>
+              <div>{{ row.userInfo.userRole }}</div>
+              <div>{{ row.userInfo.userDepartment }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Title Column -->
+          <ng-container matColumnDef="Contact">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              <span class="font-semibold">Contact</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <div>{{ row.userInfo.userEmail }}</div>
+              <div>{{ row.userInfo.userPhone }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Created Column -->
+          <ng-container matColumnDef="Entity">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Entity</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.auditInfo.entity }}
+              <span
+                class="text-sm font-medium px-2.5 py-0.5 rounded"
+                [class]="row.auditInfo.color"
+                >{{ row.auditInfo.action | titlecase }}</span
+              >
+            </td>
+          </ng-container>
+
+          <!-- State Column -->
+          <ng-container matColumnDef="Action on entity">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              <span class="font-semibold">Action on entity</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <span
+                class="text-sm font-medium px-2.5 py-0.5 rounded"
+                [class]="row.auditInfo.color"
+                >{{ row.auditInfo.action | titlecase }}</span
+              >
+              {{ row.auditInfo.entity }}
+            </td>
+          </ng-container>
+
+          <!-- Created Column -->
+          <ng-container matColumnDef="Audit date">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Audit date</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.auditInfo.auditDateTime | date : "medium" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Details">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Details</span>
+            </th>
+            <td
+              class="whitespace-nowrap break-keep"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.auditInfo.details }}
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        (page)="onPageChange($event)"
+        [length]="resultsLength"
+        [pageSize]="30"
+        aria-label="Select page of GitHub search results"
+      ></mat-paginator>
+
+      <app-responsive-drawer #filterDrawer> 
+        <div drawer-header class="p-3 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mb-4">
+          <h1 class="text-lg font-semibold">Filters</h1>
+          <mat-icon (click)="filterDrawer.toggleDrawer()" class="material-symbols-rounded">close</mat-icon>
+        </div>
+        <app-table-filter class="flex-1 overflow-y-auto" [filters]="filters"></app-table-filter>
+        <div drawer-footer class="flex justify-end px-3 gap-x-3">
+          <button mat-button>Reset</button>
+          <button mat-flat-button>Apply</button>
+        </div>
+      </app-responsive-drawer>
+    </div>
+  </div>
+</div>

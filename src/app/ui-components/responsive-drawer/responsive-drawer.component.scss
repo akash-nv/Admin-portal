@@ -1,0 +1,13 @@
+.responsive-drawer {
+    // border: 1px solid;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+::ng-deep {
+    .mat-bottom-sheet-container {
+        // background: #ffffff !important;
+    }
+    .mat-drawer.mat-drawer-side {
+        z-index: 999;
+    }
+}

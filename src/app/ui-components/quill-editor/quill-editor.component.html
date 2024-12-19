@@ -1,0 +1,321 @@
+<button class="hidden" [appPopover]="bubbleContent"></button>
+<input type="file" #fileInput (change)="fileChange($event)" class="hidden" />
+@if(theme === 'snow') {
+  <ng-container *ngTemplateOutlet="bubbleContent; context: {snowToolBar: true}"></ng-container>
+}
+<div class="border border-gray-900/10 dark:border-gray-400/30 rounded-lg p-editor-container shadow-sm" [ngClass]="{'border-t rounded-t-none': theme === 'snow' && !_readonly()}" [class]="styleClass">
+    <!-- <div class="p-editor-toolbar" *ngIf="toolbar || headerTemplate">
+        <ng-content select="p-header"></ng-content>
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    </div> -->
+    
+    @if(theme === 'snow') {
+      <div class="p-editor-toolbar">
+      </div>
+    }
+    <div class="p-editor-content" [ngStyle]="style"></div>
+</div>
+
+<ng-template #bubbleContent let-snowToolBar="snowToolBar">
+  <div class="rounded-lg bg-inherit dark:bg-white shadow border border-gray-900/10 dark:border-gray-400/30 ql-bubble text-gray-600" [ngClass]="{'rounded-b-none border-b-0 shadow-sm': snowToolBar}">
+    <div class="max-w-screen-xl p-1 flex flex-wrap items-center space-x-0.5">
+        <button [appPopover]="header" [backdrop]="false" class="p-1.5 rounded hover:bg-gray-100 flex" matTooltip="Bold">
+          @if(checkStatus('header')) {
+            <mat-icon class="material-symbols-rounded">format_h{{checkStatus('header')}}</mat-icon>
+          } @else if(checkStatus('blockquote')) {
+            <mat-icon class="material-symbols-rounded">format_quote</mat-icon>
+          } @else {
+            <svg class="ql-icon" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M560-160v-520H360v-120h520v120H680v520H560Zm-360 0v-320H80v-120h360v120H320v320H200Z"/></svg>
+          }
+            <svg class="ql-icon" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M480-360 280-560h400L480-360Z"/></svg>
+        </button>
+        <div
+        class="block h-6 w-px bg-gray-900/20"
+        aria-hidden="true"
+        ></div>
+      <!-- Toolbar Buttons -->
+      <div class="flex items-center space-x-0.5">
+        <button (click)="textFormat('bold')" class="p-1.5 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('bold')" matTooltip="Bold">
+            <span class="ql-icon" [innerHTML]="icons.bold | safeHtml">
+            </span>
+        </button>
+        <button (click)="textFormat('italic')" class="p-1.5 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('italic')" matTooltip="Italic">
+            <span class="ql-icon" [innerHTML]="icons.italic | safeHtml">
+            </span>
+        </button>
+        <button (click)="textFormat('underline')" class="p-1.5 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('underline')" matTooltip="Underline">
+            <span class="ql-icon" [innerHTML]="icons.underline | safeHtml">
+            </span>
+        </button>
+        <button (click)="textFormat('strike')" class="p-1.5 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('strike')" matTooltip="Strike">
+            <span class="ql-icon" [innerHTML]="icons.strike | safeHtml">
+            </span>
+        </button>
+        <button (click)="codeFormat('code')" class="p-1.5 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('code')" matTooltip="Code">
+            <span class="ql-icon" [innerHTML]="icons.code | safeHtml">
+            </span>
+        </button>
+        <button (click)="codeFormat('code-block')" class="p-1.5 rounded hover:bg-gray-100"  [class.bg-gray-100]="checkStatus('code-block')" matTooltip="Code-block">
+            <span class="ql-icon">
+                <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="m384-336 56-57-87-87 87-87-56-57-144 144 144 144Zm192 0 144-144-144-144-56 57 87 87-87 87 56 57ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
+            </span>
+        </button>
+      </div>
+
+      <div
+        class="block h-6 w-px bg-gray-900/20"
+        aria-hidden="true"
+        ></div>
+  
+      <!-- Right section with dropdowns and additional icons -->
+      <div class="ml-auto flex items-center space-x-0.5">
+        <button [appPopover]="Color" [backdrop]="false" class="p-1.5 rounded hover:bg-gray-100 flex" matTooltip="Text color">
+            <span class="ql-icon" [style.color]="checkStatus('color')" [innerHTML]="icons.color | safeHtml">
+            </span>
+            <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M480-360 280-560h400L480-360Z"/></svg>
+        </button>
+        <button [appPopover]="bgColor" [backdrop]="false" class="p-1.5 rounded hover:bg-gray-100 flex" [style.background]="checkStatus('background')" matTooltip="Background color">
+            <span class="ql-icon" [innerHTML]="icons.background | safeHtml">
+            </span>
+            <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M480-360 280-560h400L480-360Z"/></svg>
+        </button>
+        <button [appPopover]="Align" [backdrop]="false" class="p-1.5 rounded hover:bg-gray-100 flex" matTooltip="Alignment">
+            <span class="ql-icon" [innerHTML]="icons.align[checkStatus('align') ? checkStatus('align') : ''] | safeHtml">
+            </span>
+            <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M480-360 280-560h400L480-360Z"/></svg>
+        </button>
+        <button [appPopover]="list" [backdrop]="false" class="p-1.5 rounded hover:bg-gray-100 flex" matTooltip="List">
+          @if(checkStatus('list')=== 'checked' || checkStatus('list') === 'unchecked') {
+            <span class="ql-icon" [innerHTML]="icons.list.check | safeHtml">
+            </span>
+          } @else {
+            <span class="ql-icon" [innerHTML]="icons.list[checkStatus('list') ? checkStatus('list') : 'bullet'] | safeHtml">
+            </span>
+          }
+            <svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#4e4e4e"><path d="M480-360 280-560h400L480-360Z"/></svg>
+        </button>
+      </div>
+      <div
+        class="block h-6 w-px bg-gray-900/20"
+        aria-hidden="true"
+        ></div>
+        <button (click)="insertTable()" class="p-2 rounded hover:bg-gray-100" matTooltip="Table">
+          <span class="ql-icon" [innerHTML]="icons.table| safeHtml">
+          </span>
+        </button>
+        <button (click)="fileInput.click()" class="p-2 rounded hover:bg-gray-100" matTooltip="Image/Video">
+          <span class="ql-icon" [innerHTML]="icons.image| safeHtml">
+          </span>
+        </button>
+        <button (click)="textLink()" class="p-2 rounded hover:bg-gray-100" matTooltip="Link">
+            <span class="ql-icon" [innerHTML]="icons.link | safeHtml">
+            </span>
+        </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #header>
+  <div class="rounded-lg bg-white border-b shadow border flex flex-col space-x-1 p-1 ql-bubble">
+      <!-- Example Color Item -->
+      <ul class="py-2 text-sm text-gray-700">
+          <li>
+            <button
+              class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+              [class.bg-gray-100]="checkStatus('header') === 1"
+              (click)="toggleFormat('header', 1)"
+            >
+              <mat-icon class="material-symbols-rounded">format_h1</mat-icon>
+              <span class="ml-3">Heading 1</span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+              [class.bg-gray-100]="checkStatus('header') === 2"
+              (click)="toggleFormat('header', 2)"
+            >
+            <mat-icon class="material-symbols-rounded">format_h2</mat-icon>
+              <span class="ml-3">Heading 2</span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+              [class.bg-gray-100]="checkStatus('header') === 3"
+              (click)="toggleFormat('header', 3)"
+            >
+            <mat-icon class="material-symbols-rounded">format_h3</mat-icon>
+              <span class="ml-3">Heading 3</span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+              [class.bg-gray-100]="checkStatus('header') === 4"
+              (click)="toggleFormat('header', 4)"
+            >
+            <mat-icon class="material-symbols-rounded">format_h4</mat-icon>
+              <span class="ml-3">Heading 4</span>
+            </button>
+          </li>
+          <li>
+              <button
+                class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+                [class.bg-gray-100]="checkStatus('header') === 5"
+                (click)="toggleFormat('header', 5)"
+              >
+              <mat-icon class="material-symbols-rounded">format_h5</mat-icon>
+                <span class="ml-3">Heading 5</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg"
+                [class.bg-gray-100]="checkStatus('header') === 6"
+                (click)="toggleFormat('header', 6)"
+              >
+              <mat-icon class="material-symbols-rounded">format_h6</mat-icon>
+                <span class="ml-3">Heading 6</span>
+              </button>
+            </li>
+            <li>
+              <button
+                class="flex items-center w-full px-2 py-2 hover:bg-gray-100 rounded-lg border-t"
+                [class.bg-gray-100]="checkStatus('blockquote')"
+                (click)="toggleFormat('blockquote', !checkStatus('blockquote'))"
+              >
+              <mat-icon class="material-symbols-rounded">format_quote</mat-icon>
+                <span class="ml-3">Quote</span>
+              </button>
+            </li>
+          </ul>
+    </div>
+</ng-template>
+<ng-template #Color>
+  <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1">
+      <!-- Example Color Item -->
+      <button (click)="toggleFormat('color', '#ef4444')" class="flex items-center justify-center w-6 h-6 border rounded-md text-red-500" [class.bg-gray-100]="checkStatus('color') === '#ef4444'">A</button>
+      <button (click)="toggleFormat('color', '#f97316')" class="flex items-center justify-center w-6 h-6 border rounded-md text-orange-500" [class.bg-gray-100]="checkStatus('color') === '#f97316'">A</button>
+      <button (click)="toggleFormat('color', '#eab308')" class="flex items-center justify-center w-6 h-6 border rounded-md text-yellow-500" [class.bg-gray-100]="checkStatus('color') === '#eab308'">A</button>
+      <button (click)="toggleFormat('color', '#3b82f6')" class="flex items-center justify-center w-6 h-6 border rounded-md text-blue-500" [class.bg-gray-100]="checkStatus('color') === '#3b82f6'">A</button>
+      <button (click)="toggleFormat('color', '#a855f7')" class="flex items-center justify-center w-6 h-6 border rounded-md text-purple-500" [class.bg-gray-100]="checkStatus('color') === '#a855f7'">A</button>
+      <button (click)="toggleFormat('color', '#ec4899')" class="flex items-center justify-center w-6 h-6 border rounded-md text-pink-500" [class.bg-gray-100]="checkStatus('color') === '#ec4899'">A</button>
+      <button (click)="toggleFormat('color', '#22c55e')" class="flex items-center justify-center w-6 h-6 border rounded-md text-green-500" [class.bg-gray-100]="checkStatus('color') === '#22c55e'">A</button>
+      <button (click)="toggleFormat('color', '#6b7280')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500" [class.bg-gray-100]="checkStatus('color') === '#6b7280'">A</button>
+    </div>
+</ng-template>
+
+<ng-template #bgColor>
+  <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1">
+      <!-- Example Color Item -->
+      <button (click)="toggleFormat('background', '#fee2e2')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-red-100" [class.border-red-400]="checkStatus('background') === '#fee2e2'">A</button>
+      <button (click)="toggleFormat('background', '#ffedd5')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-orange-100" [class.border-orange-400]="checkStatus('background') === '#ffedd5'">A</button>
+      <button (click)="toggleFormat('background', '#fef9c3')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-yellow-100" [class.border-yellow-400]="checkStatus('background') === '#fef9c3'">A</button>
+      <button (click)="toggleFormat('background', '#dbeafe')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-blue-100" [class.border-blue-400]="checkStatus('background') === '#dbeafe'">A</button>
+      <button (click)="toggleFormat('background', '#f3e8ff')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-purple-100" [class.border-purple-400]="checkStatus('background') === '#f3e8ff'">A</button>
+      <button (click)="toggleFormat('background', '#fce7f3')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-pink-100" [class.border-pink-400]="checkStatus('background') === '#fce7f3'">A</button>
+      <button (click)="toggleFormat('background', '#dcfce7')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-green-100" [class.border-green-400]="checkStatus('background') === '#dcfce7'">A</button>
+      <button (click)="toggleFormat('background', '#f3f4f6')" class="flex items-center justify-center w-6 h-6 border rounded-md text-gray-500 bg-gray-100" [class.border-gray-400]="checkStatus('background') === '#f3f4f6'">A</button>
+    </div>
+</ng-template>
+
+<ng-template #Align>
+  <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1 ql-bubble text-gray-600">
+      <!-- Example Color Item -->
+      <button (click)="toggleFormat('align', '')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('align') === ''" matTooltip="Align left">
+          <span class="ql-icon" [innerHTML]="icons.align[''] | safeHtml">
+          </span>
+      </button>
+      <button (click)="toggleFormat('align', 'center')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('align') === 'center'" matTooltip="Align center">
+          <span class="ql-icon" [innerHTML]="icons.align.center | safeHtml">
+          </span>
+      </button>
+      <button (click)="toggleFormat('align', 'justify')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('align') === 'justify'" matTooltip="Align justify">
+          <span class="ql-icon" [innerHTML]="icons.align.justify | safeHtml">
+          </span>
+      </button>
+      <button (click)="toggleFormat('align', 'right')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('align') === 'right'" matTooltip="Align right">
+          <span class="ql-icon" [innerHTML]="icons.align.right | safeHtml">
+          </span>
+      </button>
+      <div
+      class="block h-6 w-px bg-gray-900/20"
+      aria-hidden="true"
+      ></div>
+
+      <button (click)="toggleFormat('indent', '+1')" class="p-2 rounded hover:bg-gray-100" matTooltip="Indent">
+        <span class="ql-icon" [innerHTML]="icons.indent['+1'] | safeHtml">
+        </span>
+    </button>
+
+    <button (click)="toggleFormat('indent', '-1')" class="p-2 rounded hover:bg-gray-100" matTooltip="Dedent">
+      <span class="ql-icon" [innerHTML]="icons.indent['-1'] | safeHtml">
+      </span>
+  </button>
+    </div>
+</ng-template>
+
+<ng-template #list>
+  <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1 ql-bubble text-gray-600">
+      <button (click)="toggleFormat('list', 'bullet')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('list') === 'bullet'" matTooltip="Bulleted list">
+          <span class="ql-icon" [innerHTML]="icons.list.bullet | safeHtml">
+          </span>
+      </button>
+      <button (click)="toggleFormat('list', 'ordered')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('list') === 'ordered'" matTooltip="Numbered list">
+          <span class="ql-icon" [innerHTML]="icons.list.ordered | safeHtml">
+          </span>
+      </button>
+      <button (click)="toggleFormat('list', 'unchecked')" class="p-2 rounded hover:bg-gray-100" [class.bg-gray-100]="checkStatus('list') === 'checked' || checkStatus('list') === 'unchecked'" matTooltip="Check list">
+          <span class="ql-icon" [innerHTML]="icons.list.check | safeHtml">
+          </span>
+      </button>
+    </div>
+</ng-template>
+
+@if (qlTableRowRect()) {
+  <div class="w-6 h-4 flex justify-center items-center bg-white rounded-md border shadow fixed text-gray-600 rotate-90 z-10"
+    [style.top]="qlTableRowRect().top + qlTableRowRect().height/2 - 8 +'px'"
+    [style.left]="qlTableRowRect().left - 12 +'px'"
+    [appPopover]="rowActions"
+    [backdrop]="false"
+    >
+    <svg class="rotate-90 w-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z"/></svg>
+  </div>
+  <div class="w-6 h-4 flex justify-center items-center bg-white rounded-md border shadow fixed text-gray-600 z-10"
+    [style.top]="qlTableRect().top - 8 +'px'"
+    [style.left]="qlTableColRect().left + qlTableColRect().width/2 - 12 +'px'"
+    [appPopover]="colActions"
+
+    >
+    <svg class="rotate-90 w-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M360-160q-33 0-56.5-23.5T280-240q0-33 23.5-56.5T360-320q33 0 56.5 23.5T440-240q0 33-23.5 56.5T360-160Zm240 0q-33 0-56.5-23.5T520-240q0-33 23.5-56.5T600-320q33 0 56.5 23.5T680-240q0 33-23.5 56.5T600-160ZM360-400q-33 0-56.5-23.5T280-480q0-33 23.5-56.5T360-560q33 0 56.5 23.5T440-480q0 33-23.5 56.5T360-400Zm240 0q-33 0-56.5-23.5T520-480q0-33 23.5-56.5T600-560q33 0 56.5 23.5T680-480q0 33-23.5 56.5T600-400ZM360-640q-33 0-56.5-23.5T280-720q0-33 23.5-56.5T360-800q33 0 56.5 23.5T440-720q0 33-23.5 56.5T360-640Zm240 0q-33 0-56.5-23.5T520-720q0-33 23.5-56.5T600-800q33 0 56.5 23.5T680-720q0 33-23.5 56.5T600-640Z"/></svg>
+  </div>
+
+  <ng-template #rowActions>
+    <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1 ql-bubble text-gray-600">
+        <button class="p-1 rounded hover:bg-gray-100" matTooltip="Insert row above">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M200-400v240h560v-240H200Zm0 320q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40q17 0 28.5 11.5T280-760q0 17-11.5 28.5T240-720h-40v240h560v-240h-40q-17 0-28.5-11.5T680-760q0-17 11.5-28.5T720-800h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm240-640h-40q-17 0-28.5-11.5T360-760q0-17 11.5-28.5T400-800h40v-40q0-17 11.5-28.5T480-880q17 0 28.5 11.5T520-840v40h40q17 0 28.5 11.5T600-760q0 17-11.5 28.5T560-720h-40v40q0 17-11.5 28.5T480-640q-17 0-28.5-11.5T440-680v-40Zm40 240Zm0 80v-80 80Zm0 0Z"/></svg>
+        </button>
+        <button class="p-1 rounded hover:bg-gray-100" matTooltip="Insert row below">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M760-560v-240H200v240h560ZM200-160q-33 0-56.5-23.5T120-240v-560q0-33 23.5-56.5T200-880h560q33 0 56.5 23.5T840-800v560q0 33-23.5 56.5T760-160h-40q-17 0-28.5-11.5T680-200q0-17 11.5-28.5T720-240h40v-240H200v240h40q17 0 28.5 11.5T280-200q0 17-11.5 28.5T240-160h-40Zm280 80q-17 0-28.5-11.5T440-120v-40h-40q-17 0-28.5-11.5T360-200q0-17 11.5-28.5T400-240h40v-40q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280v40h40q17 0 28.5 11.5T600-200q0 17-11.5 28.5T560-160h-40v40q0 17-11.5 28.5T480-80Zm0-400Zm0-80v80-80Zm0 0Z"/></svg>
+        </button>
+        <button class="p-1 rounded hover:bg-gray-100 rotate-90" matTooltip="Merge cells">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M360-480Zm240 0ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h160q33 0 56.5 23.5T440-760v40q0 17-11.5 28.5T400-680q-17 0-28.5-11.5T360-720v-40H200v560h160v-40q0-17 11.5-28.5T400-280q17 0 28.5 11.5T440-240v40q0 33-23.5 56.5T360-120H200Zm400 0q-33 0-56.5-23.5T520-200v-40q0-17 11.5-28.5T560-280q17 0 28.5 11.5T600-240v40h160v-560H600v40q0 17-11.5 28.5T560-680q-17 0-28.5-11.5T520-720v-40q0-33 23.5-56.5T600-840h160q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H600ZM440-440h-40q-17 0-28.5-11.5T360-480q0-17 11.5-28.5T400-520h40v-40q0-17 11.5-28.5T480-600q17 0 28.5 11.5T520-560v40h40q17 0 28.5 11.5T600-480q0 17-11.5 28.5T560-440h-40v40q0 17-11.5 28.5T480-360q-17 0-28.5-11.5T440-400v-40Z"/></svg>
+        </button>
+      </div>
+  </ng-template>
+  
+  <ng-template #colActions>
+    <div class="rounded-lg bg-white border-b shadow border flex space-x-1 p-1 text-gray-600">
+        <button class="p-1 rounded hover:bg-gray-100" matTooltip="Insert column before">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-200h240v-560H560v560Zm-320 80q-33 0-56.5-23.5T160-200v-40q0-17 11.5-28.5T200-280q17 0 28.5 11.5T240-240v40h240v-560H240v40q0 17-11.5 28.5T200-680q-17 0-28.5-11.5T160-720v-40q0-33 23.5-56.5T240-840h560q33 0 56.5 23.5T880-760v560q0 33-23.5 56.5T800-120H240Zm-40-240q-17 0-28.5-11.5T160-400v-40h-40q-17 0-28.5-11.5T80-480q0-17 11.5-28.5T120-520h40v-40q0-17 11.5-28.5T200-600q17 0 28.5 11.5T240-560v40h40q17 0 28.5 11.5T320-480q0 17-11.5 28.5T280-440h-40v40q0 17-11.5 28.5T200-360Zm280-120Zm80 0h-80 80Zm0 0Z"/></svg>
+        </button>
+        <button class="p-1 rounded hover:bg-gray-100" matTooltip="Insert column after">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M400-760H160v560h240v-560ZM160-120q-33 0-56.5-23.5T80-200v-560q0-33 23.5-56.5T160-840h560q33 0 56.5 23.5T800-760v40q0 17-11.5 28.5T760-680q-17 0-28.5-11.5T720-720v-40H480v560h240v-40q0-17 11.5-28.5T760-280q17 0 28.5 11.5T800-240v40q0 33-23.5 56.5T720-120H160Zm600-240q-17 0-28.5-11.5T720-400v-40h-40q-17 0-28.5-11.5T640-480q0-17 11.5-28.5T680-520h40v-40q0-17 11.5-28.5T760-600q17 0 28.5 11.5T800-560v40h40q17 0 28.5 11.5T880-480q0 17-11.5 28.5T840-440h-40v40q0 17-11.5 28.5T760-360ZM480-480Zm-80 0h80-80Zm0 0Z"/></svg>
+        </button>
+        <button class="p-1 rounded hover:bg-gray-100" matTooltip="Merge cells">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M360-480Zm240 0ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h160q33 0 56.5 23.5T440-760v40q0 17-11.5 28.5T400-680q-17 0-28.5-11.5T360-720v-40H200v560h160v-40q0-17 11.5-28.5T400-280q17 0 28.5 11.5T440-240v40q0 33-23.5 56.5T360-120H200Zm400 0q-33 0-56.5-23.5T520-200v-40q0-17 11.5-28.5T560-280q17 0 28.5 11.5T600-240v40h160v-560H600v40q0 17-11.5 28.5T560-680q-17 0-28.5-11.5T520-720v-40q0-33 23.5-56.5T600-840h160q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H600ZM440-440h-40q-17 0-28.5-11.5T360-480q0-17 11.5-28.5T400-520h40v-40q0-17 11.5-28.5T480-600q17 0 28.5 11.5T520-560v40h40q17 0 28.5 11.5T600-480q0 17-11.5 28.5T560-440h-40v40q0 17-11.5 28.5T480-360q-17 0-28.5-11.5T440-400v-40Z"/></svg>
+        </button>
+      </div>
+  </ng-template>
+}

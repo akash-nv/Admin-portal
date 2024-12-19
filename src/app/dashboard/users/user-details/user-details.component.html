@@ -1,0 +1,52 @@
+<div class="h-full flex flex-col py-2 ps-2">
+
+    <mat-tab-group class="flex-1 overflow-y-auto sticky top-0" mat-stretch-tabs="false" mat-align-tabs="start">
+        <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">account_circle</mat-icon>
+              <span class="font-semibold">Profile</span>
+            </ng-template>
+            <div class="flex flex-col h-full">
+              <app-coming-soon></app-coming-soon>
+            </div>
+          </mat-tab>
+        <mat-tab color="primary">
+          <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">shield_lock</mat-icon>
+              <span class="font-semibold">Assigment</span>
+          </ng-template>
+          <div class="flex flex-col h-full">
+            <app-user-assigment></app-user-assigment>
+          </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="material-symbols-rounded mr-2">query_stats</mat-icon>
+            <span class="font-semibold">Stats</span>
+          </ng-template>
+          <div class="flex flex-col h-full">
+            <app-coming-soon></app-coming-soon>
+          </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">sticky_note_2</mat-icon>
+              <span class="font-semibold">Notes</span>
+            </ng-template>
+            <div class="flex flex-col h-full">
+              <app-notes class="h-full"></app-notes>
+            </div>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">overview</mat-icon>
+              <span class="font-semibold">Audit logs</span>
+            </ng-template>
+            <div class="flex flex-col h-full">
+               <app-audits></app-audits>
+              </div>
+          </mat-tab>
+      </mat-tab-group>
+</div>
+  

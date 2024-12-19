@@ -1,0 +1,19 @@
+<div class="w-full flex justify-center items-center h-full">
+    <div class="flex flex-col items-center w-60">
+      <!-- Magnifying glass icon -->
+      <div class="bg-gray-100 bg-opacity-40 rounded-full p-3 mb-4">
+        <div class="flex items-center justify-center w-14 h-14 bg-gray-100 primary-text-color-40 rounded-full">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- No Contacts Found message -->
+      <h2 class="text-lg font-semibold text-gray-800">No {{title() | titlecase }}s found</h2>
+      <p class="text-sm text-gray-500 text-center mt-2">{{title() | titlecase }} list is empty, indicating no stored information
+        for communication.</p>
+    </div>
+  </div>

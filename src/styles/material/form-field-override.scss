@@ -1,0 +1,25 @@
+.hint-none {
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+    }
+}
+
+.mat-mdc-notch-piece {
+    &.mdc-notched-outline__notch {
+        border-right: 0;
+    }
+}
+
+.mdc-notched-outline {
+    &.mdc-notched-outline--upgraded, &.mdc-notched-outline--no-label {
+        .mdc-notched-outline__leading {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .mdc-notched-outline__trailing {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+    }
+}

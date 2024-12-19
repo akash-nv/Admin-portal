@@ -1,0 +1,375 @@
+<div class="h-full flex flex-col">
+  <div class="border-b border-gray-900/10 dark:border-gray-400/30">
+    <div
+      class="flex flex-row items-center justify-between space-x-4 p-2"
+    >
+      <div
+        class="w-full lg:w-2/3 flex space-y-3 flex-row md:items-center"
+      >
+        <form class="w-full md:max-w-sm mb-0 flex-1 md:mr-4">
+          <mat-form-field class="hint-none w-full" appearance="outline">
+            <mat-icon matPrefix class="material-symbols-rounded py-0 pr-0"
+              >search</mat-icon
+            >
+            <input
+              [formControl]="searchText"
+              type="text"
+              matInput
+              placeholder="Search"
+            />
+          </mat-form-field>
+        </form>
+      </div>
+      <div
+        class="w-auto hidden lg:flex flex-row items-center justify-end space-x-3 flex-shrink-0"
+      >
+        <button type="submit" mat-flat-button (click)="filterDrawer.toggleDrawer()">
+          <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+          Filters
+        </button>
+        <button (click)="download()" type="submit" mat-flat-button>
+          <mat-icon class="material-symbols-rounded">download</mat-icon>
+          Export
+        </button>
+      </div>
+
+      <div
+        class="w-auto flex lg:hidden flex-row items-center justify-end space-x-3 flex-shrink-0"
+      >
+        <button type="submit" mat-mini-fab (click)="filterDrawer.toggleDrawer()">
+          <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+        </button>
+        <button (click)="download()" type="submit" mat-mini-fab>
+          <mat-icon class="material-symbols-rounded">download</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="flex-1 sm:overflow-y-auto overflow-x-hidden">
+    <div class="relative h-full flex flex-col">
+      @if (isLoadingResults() || (!data().length && !isLoadingResults())) {
+      <div
+        class="absolute flex items-center justify-center bottom-14 top-0 left-0 right-0 z-10 backdrop-blur-sm"
+      >
+        @if (isLoadingResults()) {
+        <div class="w-full flex justify-center items-center h-full">
+          <mat-spinner></mat-spinner>
+        </div>
+        } @if (!data().length && !isLoadingResults()) {
+        <app-no-data-found [title]="'customer'"></app-no-data-found>
+        }
+      </div>
+      }
+
+      <div class="relative flex-1 overflow-auto ">
+        <table mat-table [dataSource]="data()" class="w-full bg-white">
+          <!-- Number Column -->
+          <!-- <ng-container matColumnDef="company">
+                <th class="whitespace-nowrap break-keep" mat-header-cell *matHeaderCellDef>
+                  <span class="font-semibold">Company</span>
+                </th>
+                <td (click)="goToClinics(row.id)" class="whitespace-nowrap break-keep cursor-pointer" mat-cell *matCellDef="let row">{{row.company.name}}</td>
+              </ng-container> -->
+
+          <!-- Title Column -->
+          <ng-container matColumnDef="Main doctor">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              <div>
+                <div class="w-6 h-full flex items-center mr-2"></div>
+                <span class="font-semibold">Main doctor</span>
+              </div>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <div class="flex items-center">
+                <div class="w-6 flex items-center mr-2">
+                  @if(row.csiSense.strValue === 'Needs attention') {
+                  <!-- <button mat-icon-button color="warn"> -->
+                  <mat-icon
+                    [appPopover]="csiSense"
+                    [templateData]="row.csiSense"
+                    event="hover"
+                    color="warn"
+                    class="material-symbols-rounded"
+                    >info</mat-icon
+                  >
+                  <!-- </button> -->
+                  }
+                </div>
+                @if(row.contactInfo.website) {
+                <button
+                  mat-icon-button
+                  (click)="
+                    $event.stopPropagation();
+                    openWebsite(row.contactInfo.website)
+                  "
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >open_in_new</mat-icon
+                  >
+                </button>
+                }
+                <span>{{ row.mainDoctor }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="contact info">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+            >
+              <span class="font-semibold">Contact info</span>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <div>{{ row.contactInfo.address }}</div>
+              <div>{{ row.contactInfo.email }}</div>
+              <div>{{ row.contactInfo.phone }}</div>
+            </td>
+          </ng-container>
+
+          <!-- Created Column -->
+          <ng-container matColumnDef="paid clinics">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Paid clinics</span>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.paidClinicCount }}
+            </td>
+          </ng-container>
+
+          <!-- Created Column -->
+          <ng-container matColumnDef="unpaid clinics">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Unpaid clinics</span>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.unpaidClinicCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Status</span>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              <span
+                class="text-sm font-medium px-2.5 py-0.5 rounded"
+                [class]="CustomerStatus[row.status]"
+                >{{ row.status | titlecase }}</span
+              >
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="created on">
+            <th
+              class="whitespace-nowrap break-keep"
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              disableClear
+            >
+              <span class="font-semibold">Created on</span>
+            </th>
+            <td
+              (click)="goToClinics(row.csiMainDocObjId)"
+              class="whitespace-nowrap break-keep cursor-pointer"
+              mat-cell
+              *matCellDef="let row"
+            >
+              {{ row.dateCreated | date }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="star" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+              &nbsp;
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu" [xPosition]="'before'">
+                <button
+                  mat-menu-item
+                  (click)="openDialog(deleteRecordTemplate, row)"
+                >
+                  <mat-icon color="warn" class="material-symbols-rounded"
+                    >delete</mat-icon
+                  >
+                  <span>Delete</span>
+                </button>
+                <button mat-menu-item (click)="openDialog(verifyOTP, row)">
+                  <mat-icon
+                    [color]="row.activate ? 'warn' : 'primary'"
+                    class="material-symbols-rounded"
+                    >{{ row.activate ? "block" : "call_quality" }}</mat-icon
+                  >
+                  <span>{{ row.activate ? "Deactivate" : "Activate" }}</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        (page)="onPageChange($event)"
+        [length]="resultsLength"
+        [pageSize]="30"
+        aria-label="Select page of GitHub search results"
+      ></mat-paginator>
+
+      <app-responsive-drawer #filterDrawer> 
+        <div drawer-header class="p-3 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mb-4">
+          <h1 class="text-lg font-semibold">Filters</h1>
+          <mat-icon (click)="filterDrawer.toggleDrawer()" class="material-symbols-rounded">close</mat-icon>
+        </div>
+        <app-table-filter class="flex-1 overflow-y-auto" [filters]="filters"></app-table-filter>
+        <div drawer-footer class="flex justify-end px-3 gap-x-3">
+          <button mat-button>Reset</button>
+          <button mat-flat-button>Apply</button>
+        </div>
+      </app-responsive-drawer>
+    </div>
+  </div>
+</div>
+
+<ng-template #deleteRecordTemplate let-data>
+  <h2 mat-dialog-title>Delete Record</h2>
+  <mat-dialog-content class="mat-typography">
+    <p>
+      Are you sure, you want to delete
+      <strong>{{ data.firstName }}</strong> record?
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      (click)="deleteRecord(data.id)"
+      mat-flat-button
+      color="warn"
+      [disabled]="isSavingRecord()"
+    >
+      @if (isSavingRecord()) {
+      <mat-icon>
+        <mat-spinner [diameter]="18"></mat-spinner>
+      </mat-icon>
+      } Delete
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #verifyOTP let-data>
+  <div style="display: flex" mat-dialog-title>
+    <div class="flex items-center mt-2">
+      <img
+        alt=""
+        class="h-10 w-8"
+        src="https://plugins.miniorange.com/wp-content/uploads/2023/03/microsoft_authenticator.webp"
+      />
+      <h2 class="w-fit ms-3">OTP Verification</h2>
+    </div>
+  </div>
+  <mat-dialog-content class="mat-typography">
+    <p class="mb-2">
+      Are you sure, you want to {{ data.activate ? "Deactivate" : "Activate" }}
+      <strong>{{ data.firstName }}</strong
+      >?
+    </p>
+    <p class="text-center text-gray-400 mb-4">
+      Enter OTP from your Microsoft authenticator.
+    </p>
+    <app-otp-input></app-otp-input>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      (click)="changeStatu(data.id)"
+      mat-flat-button
+      [color]="data.activate ? 'warn' : 'primary'"
+      [disabled]="isSavingRecord()"
+    >
+      @if (isSavingRecord()) {
+      <mat-icon>
+        <mat-spinner [diameter]="18"></mat-spinner>
+      </mat-icon>
+      }
+      {{ data.activate ? "Deactivate" : "Activate" }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #csiSense let-data="data">
+  <div
+    class="flex items-start p-4 mb-4 text-sm shadow text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+    role="alert"
+  >
+    <button>
+      <mat-icon color="warn" class="material-symbols-rounded me-3"
+        >info</mat-icon
+      >
+    </button>
+    <div>
+      <span class="font-semibold text-base">{{ data.strValue }}</span>
+      <ul class="mt-1.5 list-disc list-inside">
+        @for(item of data.attentionItems; track item) {
+        <li>{{ item.message }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+</ng-template>

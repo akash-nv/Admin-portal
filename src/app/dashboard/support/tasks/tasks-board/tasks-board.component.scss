@@ -1,0 +1,15 @@
+.scroll-container {
+    // visibility: hidden;
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            background: #afadad;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<div class="h-full flex flex-col">
+    <div class="flex-1 overflow-y-auto px-2"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false">
+             @for(item of notifications(); track i; let i = $index) {
+                <app-notification [notificationData]="item"></app-notification>
+            }
+    </div>
+</div>

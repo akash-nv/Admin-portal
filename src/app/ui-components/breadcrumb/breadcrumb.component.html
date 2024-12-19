@@ -1,0 +1,26 @@
+
+@if(!false) {
+    <nav class="flex px-1.5 py-2 text-gray-700 dark:text-gray-200 rounded-lg" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            @for(breadcrumb of breadcrumbs; track breadcrumb.label; let last = $last; let first = $first) {  
+                <li>
+                    <div class="flex items-center">
+                        @if(!first) {
+                            <span class="mx-1 sm:mx-1.5 text-gray-400">/</span> 
+                        }
+                        @if(!last) {
+                            <a class="ms-1 text-sm font-medium text-gray-700 dark:text-gray-200" [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
+                        } @else {
+                            <span class="ms-1 text-sm font-medium text-gray-700 dark:text-gray-200">{{ breadcrumb.label }}</span>
+                        } 
+                    </div>
+                </li>
+            }
+        </ol>
+    </nav>
+} @else {
+    <button mat-button class="m-1" (click)="goBack()">
+        <mat-icon class="material-symbols-rounded">arrow_back</mat-icon>
+        Back
+    </button>
+}

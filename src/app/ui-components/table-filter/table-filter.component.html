@@ -1,0 +1,40 @@
+<div class="flex-1 flex flex-col px-3 overflow-y-auto gap-y-3">
+    @for(filter of filters(); track filter) {
+        <div>
+            <h6 class="text-sm text-gray-900 dark:text-gray-200 font-semibold sticky top-0 z-10">
+                {{filter.title}}
+            </h6>
+            @switch (filter.type) {
+                @case ('checkbox') {
+                    <div class="grid grid-cols-2">
+                        @for(option of filter.options; track option) {
+                            <mat-checkbox class="col-span-1 h-7">{{ option.title }}</mat-checkbox>
+                        }
+                    </div>
+                }
+
+                @case ('dropdown') {
+                    <mat-form-field class="hint-none w-full" appearance="outline">
+                        <mat-select>
+                            @for(option of filter.options; track option) {
+                                <mat-option [value]="option.value">{{ option.title }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
+
+                @case ('chips') {
+                    <mat-chip-listbox lass="flex" aria-label="Cutest dog breeds">
+                        @for (tag of filter.options; track tag; let idx = $index ) {
+                        <mat-chip-option>
+                            <div class="flex items-center">
+                                <span>{{ tag.title }}</span>
+                            </div>
+                        </mat-chip-option>
+                        }
+                    </mat-chip-listbox>
+                }
+            }
+        </div>
+    }
+</div>

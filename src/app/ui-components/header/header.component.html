@@ -1,0 +1,110 @@
+<mat-toolbar
+  class="header flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-900/10 dark:border-gray-400/30 shadow-sm sm:gap-x-6"
+>
+  <div class="flex items-center flex-grow">
+    @if (isToggle()) {
+    <button mat-icon-button (click)="toggleDrawer()">
+      <mat-icon class="material-symbols-rounded">menu</mat-icon>
+    </button>
+    }
+    <span class="text-lg sm:text-xl font-semibold ms-2">{{ title() }}</span>
+  </div>
+  <div class="flex items-center">
+
+    <button
+      mat-icon-button
+      class="p-1 bell-icon mr-2"
+      matBadge="5"
+      [matMenuTriggerFor]="notifictionMenu"
+    >
+      <mat-icon class="material-symbols-rounded">notifications</mat-icon>
+    </button>
+
+    <mat-menu
+      class="notification-menu"
+      #notifictionMenu="matMenu"
+      [xPosition]="'before'"
+    >
+      <div
+        class="w-full mx-auto flex flex-col border border-gray-900/10 dark:border-gray-400/30 bg-[#f9f9ff] dark:bg-[#10131a] rounded my-[-8px] dark:text-gray-200"
+      >
+        <div
+          (click)="$event.stopPropagation()"
+          class="flex justify-between items-center p-3 border-b border-gray-900/10 dark:border-gray-400/30"
+        >
+          <h2 class="text-lg font-semibold">Notifications</h2>
+          <p class="text-base text-green-500">5</p>
+        </div>
+
+        <!-- Notifications list -->
+        <div
+          (click)="$event.stopPropagation()"
+          class="overflow-y-auto max-h-96 px-1.5 space-y-4"
+        >
+          <!-- Notification Item 1 -->
+          @for(item of notifications(); track item) {
+          <app-notification [notificationData]="item"></app-notification>
+          }
+        </div>
+
+        <!-- All notifications button -->
+        <div class="p-4">
+          <a class="w-full" mat-flat-button routerLink="/notifications"
+            >All Notifications</a
+          >
+        </div>
+      </div>
+    </mat-menu>
+
+    <div
+      class="hidden sm:block sm:h-6 sm:w-px sm:bg-gray-900/20"
+      aria-hidden="true"
+    ></div>
+
+    <button mat-button class="p-1 hide-small" [matMenuTriggerFor]="menu">
+      <div class="flex items-center">
+        <img
+          class="h-8 w-8 rounded-full"
+          src="https://media.licdn.com/dms/image/v2/C5103AQE1NORwaBg7YA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1575917183702?e=1736985600&v=beta&t=G6SikCvcrcC_F24418_ZJUKN9rzl-odzbXtTnblSn6E"
+          alt=""
+        />
+        <div class="hidden sm:flex items-center">
+          <span
+            class="ml-3 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
+            aria-hidden="true"
+            >Aftab Ahmed</span
+          >
+          <mat-icon class="material-symbols-rounded ms-1.5"
+            >expand_more</mat-icon
+          >
+        </div>
+      </div>
+    </button>
+    <button mat-icon-button class="p-1 show-small" [matMenuTriggerFor]="menu">
+      <img
+        class="h-10 w-10 rounded-full"
+        src="https://media.licdn.com/dms/image/v2/C5103AQE1NORwaBg7YA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1575917183702?e=1736985600&v=beta&t=G6SikCvcrcC_F24418_ZJUKN9rzl-odzbXtTnblSn6E"
+        alt=""
+      />
+    </button>
+  </div>
+  <mat-menu #menu="matMenu" [xPosition]="'before'">
+    <a [routerLink]="['/', 'manage', 'profile']" mat-menu-item>
+      <mat-icon class="material-symbols-rounded"
+        >encrypted</mat-icon
+      >
+      <span>Profile</span>
+    </a>
+    <button (click)="logout()" mat-menu-item>
+      <mat-icon class="material-symbols-rounded"
+        >logout</mat-icon
+      >
+      <span>Log out</span>
+    </button>
+    <button mat-menu-item (click)="$event.stopPropagation()">
+      <div class="flex justify-center">
+        <mat-slide-toggle class="themeToggle" color [(ngModel)]="isDark" (ngModelChange)="onChanges($event)"></mat-slide-toggle>
+      </div>
+    </button>
+  </mat-menu>
+</mat-toolbar>

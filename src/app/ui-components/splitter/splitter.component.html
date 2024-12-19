@@ -1,0 +1,35 @@
+<div #container [ngClass]="containerClass()" [class]="styleClass" [attr.data-pc-name]="'splitter'" [attr.data-p-gutter-resizing]="false" [attr.data-pc-section]="'root'">
+    <!-- @for(panel of panels; track panel; let i= $index) { -->
+     <!-- <ng-container *ngFor="let panel of templates; let i = index"> -->
+        @for(panel of templates; track panel; let i = $index) {
+            <div [ngClass]="panelContainerClass()" class="h-full" tabindex="-1" [attr.data-pc-name]="'splitter'" [attr.data-pc-section]="'root'">
+                <ng-container *ngTemplateOutlet="panel"></ng-container>
+            </div>
+            @if(i !== panels.length - 1) {
+                <div
+                class="splitter-gutter bg-gray-200 text-gray-400 focus:bg-indigo-300 hover:bg-indigo-300"
+                role="separator"
+                tabindex="-1"
+                (mousedown)="onGutterMouseDown($event, i)"
+                (touchstart)="onGutterTouchStart($event, i)"
+                (touchmove)="onGutterTouchMove($event)"
+                (touchend)="onGutterTouchEnd($event)"
+                [attr.data-p-gutter-resizing]="false"
+                [attr.data-pc-section]="'gutter'"
+            >
+                <div
+                    class="splitter-gutter-handle"
+                    tabindex="0"
+                    [ngStyle]="gutterStyle()"
+                    [attr.aria-orientation]="layout"
+                    [attr.aria-valuenow]="prevSize"
+                    [attr.data-pc-section]="'gutterhandle'"
+                    (keyup)="onGutterKeyUp($event)"
+                    (keydown)="onGutterKeyDown($event, i)"
+                ></div>
+            </div>
+            }
+        }
+        <!-- </ng-container> -->
+    <!-- } -->
+</div>

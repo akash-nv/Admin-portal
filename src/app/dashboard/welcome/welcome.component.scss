@@ -1,0 +1,23 @@
+@import '../../../styles/theme.scss';
+
+.bg-100-blue{
+    background: $primary-color-95;
+}
+.module__card {
+    .icon {
+        height: 48px;
+        width: 48px;
+    }
+}
+
+.label {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    mat-icon {
+        height: 14px;
+        width: 14px;
+        font-size: 14px;
+    }
+}

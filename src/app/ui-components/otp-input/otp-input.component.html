@@ -1,0 +1,17 @@
+<form [formGroup]="otpFormGroup" class="flex justify-between">
+    <div class="flex justify-between w-full" formArrayName="otpFormArray">
+        @for(control of getArray(); track control; let i = $index) {
+            <mat-form-field class="hint-none w-10 h-10" appearance="outline">
+                <input maxlength="1" 
+                [formControlName]="i"
+                (input)="onInput($event, i)"
+                (keydown)="onKeyDown($event, i)"
+                (paste)="onPaste($event)"
+                #otpInput
+                class="text-center"
+                type="number" matInput>
+            </mat-form-field>
+        }
+    </div>
+</form>
+  

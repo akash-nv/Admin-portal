@@ -1,0 +1,95 @@
+.ql-bubble {
+    svg {
+        height: 20px;
+        width: 20px;
+    }
+
+    .ql-stroke {
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2;
+    }
+
+    .ql-tooltip:not(.ql-flip) {
+        .ql-tooltip-arrow {
+            display: none;
+        }
+    }
+}
+
+.p-editor-toolbar {
+    &.ql-toolbar {
+        display: none;
+
+        &.ql-snow {
+            display: none;
+        }
+    }
+}
+
+.p-editor-container {
+    .ql-container {
+        font-size: 14px;
+        &.ql-snow {
+            border: none
+        }
+    }
+}
+
+.ql-editor {
+
+    li[data-list=unchecked]>.ql-ui:before {
+        transition: 'border-color .2s cubic-bezier(.785,.135,.15,.86), background .2s cubic-bezier(.785,.135,.15,.86)';
+        content: "";
+        background: #0000;
+        border: 1px solid #c1c1c1;
+        width: 1em;
+        height: 1em;
+        margin-top: .25em;
+        margin-left: -1.375em;
+        padding: 0;
+        border-radius: 50%;
+        transform: translate(0);
+    }
+
+    li[data-list=checked] {
+        text-decoration: line-through;
+    }
+
+    li[data-list=checked]>.ql-ui:before {
+        transition: 'border-color .2s cubic-bezier(.785,.135,.15,.86), background .2s cubic-bezier(.785,.135,.15,.86)';
+        content: "";
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23ffffff"><path fill-rule="evenodd" d="M18.707 7.293a1 1 0 0 1 0 1.414l-7.996 7.996-.003.004a1 1 0 0 1-1.415 0l-4-4a1 1 0 1 1 1.414-1.414L10 14.586l7.293-7.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/><path fill-rule="evenodd" d="M18.707 7.293a1 1 0 0 1 0 1.414l-7.996 7.996-.003.004a1 1 0 0 1-1.415 0l-4-4a1 1 0 1 1 1.414-1.414L10 14.586l7.293-7.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>');
+        background-size: cover;
+        color: #fff;
+        background-color: #67cb48;
+        border: 1px solid #67cb48;
+        width: 1em;
+        height: 1em;
+        margin-top: .25em;
+        margin-left: -1.375em;
+        text-align: center;
+        border-radius: 50%;
+        transform: translate(0);
+        animation: checklistPulse .4s linear both;
+    }
+}
+
+@keyframes checklistPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+// .ql-table-formatter__overlay {
+//     position: fixed;
+// }

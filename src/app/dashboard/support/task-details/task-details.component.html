@@ -1,0 +1,967 @@
+<div class="h-full flex flex-col">
+  <app-breadcrumb></app-breadcrumb>
+  <splitter
+    class="flex-1 overflow-auto"
+    styleClass="h-auto flex flex-col lg:h-full lg:flex-row border-t border-gray-900/10 dark:border-gray-400/30"
+    [minSizes]="[34, 30]"
+    [panelSizes]="[60, 40]"
+    (onResizeEnd)="onResize($event)"
+  >
+    <ng-template>
+      <div #detailsContainer class="h-full w-full flex flex-col">
+        <div class="flex justify-between items-start mb-3 pt-3 px-1.5">
+          <div class="flex-1 relative">
+            <h1
+              #taskTitle
+              class="w-full text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200 bg-inherit px-1 outline-none rounded focus-within:outline focus-within:outline-gray-200 resize-none indent-0 min-h-10 max-h-40 overflow-auto absolute pointer-events-none break-words whitespace-pre-wrap"
+            >{{ title }}
+            </h1>
+            <textarea
+              matInput
+              #textArea
+              (scroll)="syncContent($event, taskTitle)"
+              (keyup)="syncContent($event, taskTitle)"
+              (keydown)="preventEnter($event)"
+              class="w-full text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200 bg-inherit px-1 outline-none rounded focus-within:outline focus-within:outline-gray-200 resize-none indent-0 min-h-10 max-h-40 overflow-auto"
+              [style.height]="taskTitle.scrollHeight + 'px'"
+              [(ngModel)]="title"
+            ></textarea>
+          </div>
+          <div class="text-gray-600 text-sm"></div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-1.5">
+          <div class="hidden sm:flex">
+            <ng-container *ngTemplateOutlet="ticketInfo"></ng-container>
+          </div>
+          <div class="sm:hidden mb-3 border border-gray-900/10 dark:border-gray-400/30 rounded-lg">
+            <div
+              class="flex {{
+                isTicketInfo() ? 'border-b' : ''
+              }} border-gray-900/10 dark:border-gray-400/30 justify-between p-2 gap-x-1 cursor-pointer text-gray-500"
+              (click)="isTicketInfo.set(!isTicketInfo())"
+              matTooltip="Click to view more details"
+            >
+              <div class="flex gap-x-1">
+                <mat-icon class="material-symbols-rounded menu-caret"
+                  >task</mat-icon
+                >
+                <h3 class="text-base">Ticket Details</h3>
+              </div>
+              <mat-icon
+                class="material-symbols-rounded menu-caret"
+                [@rotatedState]="isTicketInfo()"
+                >arrow_drop_down</mat-icon
+              >
+            </div>
+            @if (isTicketInfo()) {
+            <div class="p-2" [@dropDownMenu]>
+              <ng-container *ngTemplateOutlet="ticketInfo"></ng-container>
+            </div>
+            }
+          </div>
+          <div class="grid text-gray-500 mt-2">
+            <div class="grid grid-cols-[auto_1fr] items-center gap-2">
+              <mat-icon class="material-symbols-rounded">description</mat-icon>
+              <p class="whitespace-nowrap overflow-hidden text-ellipsis">
+                Description
+              </p>
+            </div>
+            <div class="mt-2">
+              <app-quill-editor
+                [(ngModel)]="data"
+                [mentionList]="collaborators"
+                (onFocus)="isReadonly = false"
+                (onBlur)="isReadonly = true"
+                [readonly]="isReadonly"
+              ></app-quill-editor>
+            </div>
+          </div>
+          <div class="grid text-gray-500 mt-2">
+            <div class="grid grid-cols-[auto_1fr] items-center gap-2">
+              <mat-icon class="material-symbols-rounded">attachment</mat-icon>
+              <p class="whitespace-nowrap overflow-hidden text-ellipsis">
+                Attachments (2)
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-4 mt-2">
+              <!-- Attachment 1 -->
+              @for(doc of [1,2];track doc) {
+              <div
+                class="group flex items-center p-2 rounded-lg shadow-sm relative border border-gray-900/10 dark:border-gray-400/30"
+              >
+                <div
+                  class="h-10 w-10 flex items-center justify-center bg-red-100 text-red-500 rounded-lg"
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >picture_as_pdf</mat-icon
+                  >
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    Design brief.pdf
+                  </p>
+                  <p class="text-xs text-gray-500">1.5 MB • Download</p>
+                </div>
+                <button
+                  class="absolute hidden group-hover:flex -top-2.5 -right-2.5 bg-gray-50 rounded-full"
+                >
+                  <mat-icon class="material-symbols-rounded">cancel</mat-icon>
+                </button>
+              </div>
+              }
+              <div
+                class="group flex items-center p-2 rounded-lg shadow-sm border border-gray-900/10 dark:border-gray-400/30"
+              >
+                <div
+                  class="h-10 w-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-200 rounded-lg"
+                >
+                  <mat-icon class="material-symbols-rounded">upload</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-3 border border-gray-900/10 dark:border-gray-400/30 rounded-lg">
+            <div
+              class="flex {{
+                isSource() ? 'border-b' : ''
+              }} border-gray-900/10 dark:border-gray-400/30 justify-between p-2 gap-x-1 cursor-pointer text-gray-500"
+              (click)="isSource.set(!isSource())"
+              matTooltip="Click to view more details"
+            >
+              <div class="flex gap-x-1">
+                <mat-icon class="material-symbols-rounded menu-caret"
+                  >trip_origin</mat-icon
+                >
+                <h3 class="text-base">Source</h3>
+              </div>
+              <mat-icon
+                class="material-symbols-rounded menu-caret"
+                [@rotatedState]="isSource()"
+                >arrow_drop_down</mat-icon
+              >
+            </div>
+            @if (isSource()) {
+            <div class="p-2" [@dropDownMenu]>
+              <div
+                class="grid {{
+                  detailsContainerEle().nativeElement.offsetWidth > 768
+                    ? 'grid-cols-2'
+                    : ' grid-cols-1'
+                }} gap-2 divide-y divide-gray-900/10 dark:divide-gray-400/30 sm:divide-y-0"
+              >
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">nearby</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Environment
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <mat-select [formControl]="environment">
+                        @for(item of ['Developemnt', 'Stagging', 'Production'];
+                        track item; let i = $index) {
+                        <mat-option [value]="item">
+                          <div class="flex justify-between w-40">
+                            <span class="flex items-center space-x-2">
+                              <span class="whitespace-nowrap">{{ item }}</span>
+                            </span>
+                          </div>
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "Development" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >add_location_alt</mat-icon
+                  >
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Clinic Name
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <mat-select [formControl]="clinic">
+                        <div
+                          class="px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky -top-2 left-0 bg-inherit z-10"
+                        >
+                          <mat-form-field
+                            class="hint-none w-full"
+                            appearance="outline"
+                          >
+                            <input type="text" matInput placeholder="Search" />
+                          </mat-form-field>
+                        </div>
+                        @for(item of ['clinic 1', 'clinic 2', 'clinic 3',
+                        'clinic 4']; track item; let i = $index) {
+                        <mat-option [value]="item">
+                          <div class="flex justify-between w-40">
+                            <span class="flex items-center space-x-2">
+                              <span class="whitespace-nowrap">{{ item }}</span>
+                            </span>
+                          </div>
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "xyz clinic" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">target</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Area Of Issue
+                    </p>
+
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <mat-select [formControl]="areaOfIssue">
+                        <div
+                          class="px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky -top-2 left-0 bg-inherit z-10"
+                        >
+                          <mat-form-field
+                            class="hint-none w-full"
+                            appearance="outline"
+                          >
+                            <input type="text" matInput placeholder="Search" />
+                          </mat-form-field>
+                        </div>
+                        @for(item of ['Assessment', 'Payment', 'Subscriptions',
+                        'Questionarry']; track item; let i = $index) {
+                        <mat-option [value]="item">
+                          <div class="flex justify-between w-40">
+                            <span class="flex items-center space-x-2">
+                              <span class="whitespace-nowrap">{{ item }}</span>
+                            </span>
+                          </div>
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "Assessments" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">Person</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Person Name
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <input matInput type="text" [value]="'Clinic User'" />
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "Clinic user" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">call</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Person Phone
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <input matInput type="text" [value]="'+1-202-555-0194'" />
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "+1-202-555-0194" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">mail</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Person Email
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <input
+                        matInput
+                        type="text"
+                        [value]="'clinicuser@csidryeye.com'"
+                      />
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "clinicuser@csidryeye.com" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >perm_phone_msg</mat-icon
+                  >
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Preferred Contact Via
+                    </p>
+                    <mat-form-field class="flex-[2] hint-none min-w-40">
+                      <mat-select [formControl]="PreferredContact">
+                        @for(item of ['Email', 'Phone']; track item; let i =
+                        $index) {
+                        <mat-option [value]="item">
+                          <div class="flex justify-between w-40">
+                            <span class="flex items-center space-x-2">
+                              <span class="whitespace-nowrap">{{ item }}</span>
+                            </span>
+                          </div>
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      {{ "Email" }}
+                    </div> -->
+                  </div>
+                </div>
+                <div
+                  class="menu-item py-2 sm:py-0 items-center flex gap-1 text-gray-500"
+                >
+                  <mat-icon class="material-symbols-rounded">timer</mat-icon>
+                  <div
+                    class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+                  >
+                    <p
+                      class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+                    >
+                      Time Of Issue
+                    </p>
+                    <div
+                      class="text-gray-800 flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+                    >
+                      <span class="px-2">
+                        {{ today | date : "medium" }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template>
+      <div class="h-full w-full flex flex-col p-1.5">
+        <mat-tab-group
+          class="flex-1 overflow-y-auto sticky top-0"
+          mat-stretch-tabs="false"
+          mat-align-tabs="start"
+        >
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">comment</mat-icon>
+              <span class="font-semibold">Comments (3)</span>
+            </ng-template>
+            <div class="flex flex-col h-full">
+              <div class="my-4 flex items-center space-x-3 px-1">
+                <div class="w-full flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <span
+                      class="inline-flex h-10 w-10 p-2 items-center justify-center rounded-full bg-gray-500"
+                    >
+                      <span
+                        class="text-sm font-medium leading-none text-white"
+                        >{{ "Calum Tyler" | initials }}</span
+                      >
+                    </span>
+                  </div>
+                  <textarea
+                    matInput
+                    class="w-full min-h-11 h-11 outline-none focus:ring-2 focus:ring-blue-600 bg-gray-100 rounded-md p-3 text-sm text-gray-700 border-none"
+                    placeholder="Add a comment..."
+                  ></textarea>
+                </div>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+                  Send
+                </button>
+              </div>
+              <!-- Comment 1 -->
+              <div class="flex-1 space-y-4 overflow-y-auto">
+                @for(comment of comments; track comment.time;) {
+                <div class="flex items-start space-x-3 px-2">
+                  <div class="flex-shrink-0">
+                    <span
+                      class="inline-flex h-10 w-10 p-2 items-center justify-center rounded-full bg-blue-600"
+                    >
+                      <span
+                        class="text-sm font-medium leading-none text-white"
+                        >{{ comment.name | initials }}</span
+                      >
+                    </span>
+                  </div>
+                  <div class="w-full">
+                    <div class="text-gray-800 dark:text-gray-200 text-sm">
+                      <span class="font-semibold">{{ comment.name }}</span> •
+                      {{ comment.time | relativeTime : "MMM d, y, h:mm a" }}
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 text-sm mt-2">
+                      {{ comment.content }}
+                    </p>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab color="primary">
+            <ng-template mat-tab-label>
+              <mat-icon class="material-symbols-rounded mr-2">history</mat-icon>
+              <span class="font-semibold">Activities</span>
+            </ng-template>
+            <div class="flex flex-col h-full overflow-y-auto p-2">
+              <div class="relative border-s border-gray-900/10 dark:border-gray-400/30 ms-5 mt-2">
+                @for(activity of activities; track activity.time;) {
+                <div class="mb-4">
+                  <div class="flex items-center space-x-3">
+                    <!-- Avatar -->
+                    <div class="relative -start-5 flex-shrink-0">
+                      <span
+                        class="inline-flex h-10 w-10 p-2 items-center justify-center rounded-full bg-blue-600"
+                      >
+                        <span
+                          class="text-sm font-medium leading-none text-white"
+                          >{{ activity.name | initials }}</span
+                        >
+                      </span>
+                    </div>
+                    <!-- Content -->
+                    <div class="relative -start-5">
+                      <p class="text-sm text-gray-600 dark:text-gray-400">
+                        <span class="font-semibold text-gray-800 dark:text-gray-200">{{
+                          activity.name
+                        }}</span>
+                        <span class="text-gray-600 dark:text-gray-400">
+                          {{ activity.action }}
+                        </span>
+                        @if(activity.mentionedUser) {
+                        <span class="font-semibold text-gray-800 dark:text-gray-300">{{
+                          activity.mentionedUser
+                        }}</span>
+                        } @if(activity.link) {
+                        <span class="text-blue-500 font-semibold">{{
+                          activity.link
+                        }}</span>
+                        } @if(activity.fileName) {
+                        <span class="font-semibold text-gray-800 dark:text-gray-300">{{
+                          activity.fileName
+                        }}</span>
+                        }
+
+                        <span class="text-gray-600 dark:text-gray-400"> In the comments</span>
+                      </p>
+                      <p class="text-xs text-gray-400">
+                        {{ activity.time | relativeTime : "MMM d, y, h:mm a" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="relative -start-5 pl-12 mt-2">
+                    <p
+                      class="text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border dark:border-gray-400/30 rounded-md p-2"
+                    >
+                      {{ activity.comment }}
+                    </p>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </ng-template>
+  </splitter>
+</div>
+
+<ng-template #ticketInfo>
+  <div
+    class="w-full grid {{
+      detailsContainerEle().nativeElement.offsetWidth > 768
+        ? 'grid-cols-2'
+        : ' grid-cols-1'
+    }} sm:gap-2 divide-y divide-gray-900/10 dark:divide-gray-400/30 sm:divide-y-0"
+  >
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">nest_heat_link_e</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Status
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+        > -->
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <mat-select [formControl]="status">
+            <mat-select-trigger>
+              @if(status.value > -1) {
+              <button
+                mat-button
+                class="todo-button text-gray-600"
+                [ngStyle]="{ backgroundColor: buckets[status.value].color }"
+              >
+                <span class="text-sm font-semibold px-2">{{
+                  buckets[status.value].label | uppercase
+                }}</span>
+                <mat-icon
+                  (click)="nextBucket($event)"
+                  class="material-symbols-rounded border-l"
+                  >chevron_right</mat-icon
+                >
+              </button>
+              }
+            </mat-select-trigger>
+            <div
+              class="px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky -top-2 left-0 bg-inherit z-10"
+            >
+              <mat-form-field class="hint-none w-full" appearance="outline">
+                <input type="text" matInput placeholder="Search" />
+              </mat-form-field>
+            </div>
+            @for(item of buckets; track item.label; let i = $index) {
+            <mat-option [value]="i">
+              <div class="flex justify-between w-40">
+                <span class="flex items-center space-x-2">
+                  <mat-icon
+                    [ngStyle]="{ color: item.color }"
+                    class="material-symbols-rounded"
+                    >radio_button_checked</mat-icon
+                  >
+                  <span class="whitespace-nowrap">{{
+                    item.label | uppercase
+                  }}</span>
+                </span>
+              </div>
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">person</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Assigned to
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+        > -->
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <mat-select
+            placeholder="Empty"
+            class="h-full"
+            [formControl]="assignees"
+          >
+            <mat-select-trigger>
+              @if(assignees.value) {
+              <span class="flex items-center space-x-2">
+                <div class="relative flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <span
+                      class="inline-flex h-7 w-7 p-2 items-center justify-center rounded-full bg-blue-600"
+                      [style.backgroundColor]="assignees.value.bgColor"
+                    >
+                      <span
+                        class="text-sm font-medium leading-none text-white"
+                        >{{ assignees.value.value | initials }}</span
+                      >
+                    </span>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-200">
+                      {{ assignees.value.value }}
+                    </p>
+                    <!-- <p class="hidden sm:block truncate font-normal text-xs text-gray-500">
+                      {{ assignees.value.email }}
+                    </p> -->
+                  </div>
+                </div>
+              </span>
+              }
+            </mat-select-trigger>
+            <div
+              class="px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky -top-2 left-0 bg-inherit z-10"
+            >
+              <mat-form-field class="hint-none w-full" appearance="outline">
+                <input type="text" matInput placeholder="Search" />
+              </mat-form-field>
+            </div>
+            @for(item of collaborators; track item.value; let i = $index) {
+            <mat-option [value]="item">
+              <span class="flex items-center space-x-2">
+                <div class="relative flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <span
+                      class="inline-flex h-9 w-9 p-2 items-center justify-center rounded-full bg-blue-600"
+                      [style.backgroundColor]="item.bgColor"
+                    >
+                      <span
+                        class="text-sm font-medium leading-none text-white"
+                        >{{ item.value | initials }}</span
+                      >
+                    </span>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-200">
+                      {{ item.value }}
+                    </p>
+                    <p class="truncate font-normal text-xs text-gray-500">
+                      {{ item.email }}
+                    </p>
+                  </div>
+                </div>
+              </span>
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">supervisor_account</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Reporter
+        </p>
+        <div class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded">
+          <div
+            class="block whitespace-nowrap pointer-events-none overflow-hidden text-ellipsis w-full"
+          >
+            <span class="flex items-center space-x-2">
+              <div class="relative flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                  <span
+                    class="inline-flex h-7 w-7 sm:h-8 sm:w-8 p-2 items-center justify-center rounded-full bg-blue-600"
+                  >
+                    <span class="text-sm font-medium leading-none text-white">{{
+                      collaborators[1].value | initials
+                    }}</span>
+                  </span>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-sm font-medium text-gray-900 dark:text-gray-200">
+                    {{ collaborators[1].value }}
+                  </p>
+                  <!-- <p
+                    class="hidden sm:block truncate font-normal text-xs text-gray-500"
+                  >
+                    {{ collaborators[1].email }}
+                  </p> -->
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">group</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Collaborators
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+        > -->
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <mat-select placeholder="Empty" [formControl]="collaborator" multiple>
+            <mat-select-trigger>
+              @if(collaborator.value?.length) {
+              <div
+                class="block whitespace-nowrap cursor-pointer overflow-hidden text-ellipsis w-full"
+              >
+                @for(collabrat of collaborator.value; track collabrat.email;) {
+
+                <div class="inline-flex flex-shrink-0">
+                  <span
+                    class="inline-flex h-7 w-7 p-2 me-1 items-center justify-center rounded-full bg-blue-600"
+                    [style.backgroundColor]="collabrat.bgColor"
+                  >
+                    <span class="text-sm font-medium leading-none text-white">{{
+                      collabrat.value | initials
+                    }}</span>
+                  </span>
+                </div>
+                }
+              </div>
+              } @else { Empty }
+            </mat-select-trigger>
+            <div
+              class="px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky -top-2 left-0 bg-inherit z-10"
+            >
+              <mat-form-field class="hint-none w-full" appearance="outline">
+                <input type="text" matInput placeholder="Search" />
+              </mat-form-field>
+            </div>
+            @for(item of collaborators; track item.value; let i = $index) {
+            <mat-option [value]="item">
+              <span class="flex items-center space-x-2">
+                <div class="relative flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <span
+                      class="inline-flex h-9 w-9 p-2 items-center justify-center rounded-full bg-blue-600"
+                      [style.backgroundColor]="item.bgColor"
+                    >
+                      <span
+                        class="text-sm font-medium leading-none text-white"
+                        >{{ item.value | initials }}</span
+                      >
+                    </span>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-200">
+                      {{ item.value }}
+                    </p>
+                    <p class="truncate font-normal text-xs text-gray-500">
+                      {{ item.email }}
+                    </p>
+                  </div>
+                </div>
+              </span>
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">date_range</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Work Dates
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75 {{
+            picker.opened ? 'bg-gray-100/75' : ''
+          }} whitespace-nowrap"
+          [class.text-gray-800]="picker?.startAt"
+          (click)="picker.open()"
+        > -->
+        <mat-form-field
+          (click)="picker.open()"
+          class="flex-[2] hint-none min-w-40"
+        >
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              readonly
+              matStartDate
+              datePickerFormat="MMM DD YYYY"
+              placeholder="Start"
+            />
+            <input
+              readonly
+              matEndDate
+              datePickerFormat="MMM DD YYYY"
+              placeholder="End"
+            />
+          </mat-date-range-input>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">flag_2</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Priority
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center sm:p-1.5 rounded hover:bg-gray-100/75"
+        > -->
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <mat-select placeholder="Empty" [formControl]="priority">
+            <mat-select-trigger>
+              @if(priority.value > -1) {
+              <div class="flex items-center space-x-2">
+                <mat-icon
+                  [ngStyle]="{ color: priorities[priority.value].color }"
+                  class="material-symbols-rounded"
+                  >flag_2</mat-icon
+                >
+                <span class="text-gray-800 dark:text-gray-200">{{
+                  priorities[priority.value].label
+                }}</span>
+              </div>
+              }
+            </mat-select-trigger>
+            @for(item of priorities; track item.label; let i = $index) {
+            <mat-option [value]="i">
+              <span class="flex items-center space-x-2">
+                <mat-icon
+                  [ngStyle]="{ color: item.color }"
+                  class="material-symbols-rounded"
+                  >flag_2</mat-icon
+                >
+                <span class="text-base">{{ item.label }}</span>
+              </span>
+            </mat-option>
+            }
+            <mat-option [value]="">
+              <span class="flex items-center space-x-2 text-gray-500">
+                <mat-icon class="material-symbols-rounded">block</mat-icon>
+                <span class="text-base">clear</span>
+              </span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">timer</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Time Estimate
+        </p>
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <input matInput placeholder="Empty" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="menu-item py-2 sm:py-0 items-center flex gap-2 text-gray-500">
+      <mat-icon class="material-symbols-rounded">sell</mat-icon>
+      <div
+        class="ml-2 sm:ml-0 ticket_content-width flex-1 flex sm:items-center flex-col sm:flex-row"
+      >
+        <p
+          class="flex-1 min-w-24 whitespace-nowrap overflow-hidden text-ellipsis pb-1 sm:pb-0"
+        >
+          Tags
+        </p>
+        <!-- <div
+          class="flex-[2] h-10 min-w-40 flex items-center py-0.5 sm:p-1.5 rounded hover:bg-gray-100/75"
+        > -->
+        <mat-form-field class="flex-[2] hint-none min-w-40">
+          <mat-select
+            placeholder="Empty"
+            [formControl]="selectedBadges"
+            multiple
+          >
+            <mat-select-trigger>
+              @if(selectedBadges.value) {
+              <div
+                class="block whitespace-nowrap cursor-pointer overflow-hidden text-ellipsis w-full"
+              >
+                @for(badge of selectedBadges.value; track badge.label;) {
+                <div
+                  class="inline-flex items-center px-2 py-0.5 me-2 text-sm text-blue-800 bg-blue-100 border border-blue-400 font-medium rounded"
+                >
+                  {{ badge.label }}
+                </div>
+                }
+              </div>
+              }
+            </mat-select-trigger>
+            @for(item of badges; track item.label; let i = $index) {
+            <mat-option [value]="item">
+              <div class="flex justify-between w-40">
+                <span class="flex items-center space-x-2">
+                  <mat-icon class="material-symbols-rounded">sell</mat-icon>
+                  <span>{{ item.label }}</span>
+                </span>
+              </div>
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,269 @@
+<div class="relative h-full flex flex-col overflow-y-auto px-2 sm:px-4">
+    @if(customerData().csiSense.strValue === 'Needs attention') {
+      <div class="mb-4 flex items-start p-4 text-sm shadow text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 my-3" role="alert">
+        <button>
+            <mat-icon color="warn" class="material-symbols-rounded me-3">info</mat-icon>
+        </button>
+        <span class="sr-only">Danger</span>
+        <div>
+          <span class="font-semibold text-base">{{customerData().csiSense.strValue}}</span>
+            <ul class="mt-1.5 list-disc list-inside">
+              @for(item of customerData().csiSense.attentionItems; track item) {
+                <li>{{item.message}}</li>
+              }
+            </ul>
+        </div>
+      </div>
+    }
+  
+    <div class="flex-1 pr-1">
+      <div class="sticky top-0 bg-[#f9f9ff] dark:bg-[#10131a] left-0 z-10 px-2 pb-3 pt-3 justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 flex mb-4">
+        <button mat-flat-button [matMenuTriggerFor]="jumpTo">
+          <div class="flex items-center whitespace-nowrap">
+              <span class="text-sm">Jump to Section</span>
+              <mat-icon class="material-symbols-rounded">arrow_drop_down</mat-icon>
+          </div>
+        </button>
+  
+        <div
+            class="w-auto hidden lg:flex flex-row items-center justify-end space-x-3 flex-shrink-0"
+          >
+            <button type="submit" mat-flat-button (click)="filterDrawer.toggleDrawer()">
+              <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+              Filters
+            </button>
+          </div>
+  
+          <div
+            class="w-auto flex lg:hidden flex-row items-center justify-end space-x-3 flex-shrink-0"
+          >
+            <button type="submit" mat-mini-fab (click)="filterDrawer.toggleDrawer()">
+              <mat-icon class="material-symbols-rounded">filter_alt</mat-icon>
+            </button>
+          </div>
+      </div>
+    
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Clinics</h3>
+        <dl class="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+          @for(item of clinicMatrix; track item) {
+            <app-matrics [data]="item"></app-matrics>
+          }
+        </dl>
+      </div>
+  
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Paid clinics usage</h3>
+        <dl class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-400/30 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0">
+          @for(item of paidClinicUserActivity; track item; let i = $index) {
+              <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+                <h3 class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200">{{item.title}}</h3>
+                <dl class="pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-400/30 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0">
+                 @for(tag of item.tags; track tag) {
+                  <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+                    <dt class="flex justify-between">
+                      <p class="truncate text-base font-medium text-gray-500">{{tag.title}}</p>
+                      <mat-icon matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard" class="material-symbols-rounded text-gray-500">info</mat-icon>
+                    </dt>
+                    <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+                      <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+                        <span>{{tag.value}}</span>
+                        <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                        <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                        <span class="ml-1 text-sm font-medium text-gray-500">10</span>
+                      </div>
+              
+                      <div class="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
+                        <svg class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                          <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                        </svg>
+                        
+                        12%
+                      </div>
+                    </dd>
+                  </div>
+                 }
+                </dl>
+              </div>
+          }
+        </dl>
+      </div>
+  
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Paid clinics user activity</h3>
+        <dl class="mt-3 grid grid-cols-2 divide-y divide-gray-900/10 dark:divide-gray-400/30 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-2 md:divide-x md:divide-y-0">
+          @for(item of paidClinicUserActivity; track item; let i = $index) {
+              <div [ngClass]="{'bg-gray-50': i && theme() === 'light', 'bg-gray-800': i && theme() === 'dark' }">
+                <h3 class="px-3 py-5 sm:p-6 pb-0 sm:pb-0 text-base font-semibold text-gray-900 dark:text-gray-200">{{item.title}}</h3>
+                <dl class="pb-5 sm:pb-6 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-400/30 overflow-hidden rounded-lg md:grid-cols-2 md:divide-x md:divide-y-0">
+                 @for(tag of item.tags; track tag) {
+                  <div class="px-3 py-4 sm:py-4 sm:p-6 md:col-span-1">
+                    <dt class="flex justify-between">
+                      <p class="truncate text-base font-medium text-gray-500">{{tag.title}}</p>
+                      <mat-icon matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard" class="material-symbols-rounded text-gray-500">info</mat-icon>
+                    </dt>
+                    <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+                      <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+                        <span>{{tag.value}}</span>
+                        <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 hidden sm:block">from</span>
+                        <span class="ml-1 sm:ml-2 text-sm font-medium text-gray-500 block sm:hidden">/</span>
+                        <span class="ml-1 text-sm font-medium text-gray-500">100</span>
+                      </div>
+              
+                      <div class="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
+                        <svg class="hidden sm:block -ml-1 mr-0.5 size-5 shrink-0 self-center text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                          <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                        </svg>
+                        
+                        12%
+                      </div>
+                    </dd>
+                  </div>
+                 }
+                </dl>
+              </div>
+          }
+        </dl>
+      </div>
+  
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Subscriptions</h3>
+        <dl class="mt-3 grid grid-cols-1 divide-y divide-gray-900/10 dark:divide-gray-400/30 overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-900/10 dark:border-gray-400/30 shadow md:grid-cols-3 md:divide-x md:divide-y-0">
+          <div class="px-4 py-5 sm:p-6">
+            <dt class="flex justify-between">
+              <p class="truncate text-base font-medium text-gray-500">Core</p>
+              <mat-icon matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard" class="material-symbols-rounded text-gray-500">info</mat-icon>
+            </dt>
+            <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+              <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+                12
+                <span class="ml-2 text-sm font-medium text-gray-500">from 20</span>
+              </div>
+      
+              <div class="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
+                <svg class="-ml-1 mr-0.5 size-5 shrink-0 self-center text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                  <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
+                
+                12%
+              </div>
+            </dd>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <dt class="flex justify-between">
+              <p class="truncate text-base font-medium text-gray-500">Advanced</p>
+              <mat-icon matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard" class="material-symbols-rounded text-gray-500">info</mat-icon>
+            </dt>
+            <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+              <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+                8
+                <span class="ml-2 text-sm font-medium text-gray-500">from 20</span>
+              </div>
+      
+              <div class="inline-flex items-baseline rounded-full bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800 md:mt-2 lg:mt-0">
+                <svg class="-ml-1 mr-0.5 size-5 shrink-0 self-center text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                  <path fill-rule="evenodd" d="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z" clip-rule="evenodd" />
+                </svg>
+                
+                2.02%
+              </div>
+            </dd>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <dt class="flex justify-between">
+              <p class="truncate text-base font-medium text-gray-500">Total</p>
+              <mat-icon matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard" class="material-symbols-rounded text-gray-500">info</mat-icon>
+            </dt>
+            <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+              <div class="flex items-baseline text-2xl font-semibold text-indigo-600">
+                20
+                <span class="ml-2 text-sm font-medium text-gray-500">from 40</span>
+              </div>
+      
+              <div class="inline-flex items-baseline rounded-full bg-red-100 px-2.5 py-0.5 text-sm font-medium text-red-800 md:mt-2 lg:mt-0">
+                <svg class="-ml-1 mr-0.5 size-5 shrink-0 self-center text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                  <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z" clip-rule="evenodd" />
+                </svg>
+                4.05%
+              </div>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Support tickets</h3>
+        <dl class="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+          @for(item of ticketMatrix; track item) {
+            <app-matrics [data]="item"></app-matrics>
+          }
+        </dl>
+      </div>
+  
+      <div class="mb-4">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-200">Invoices</h3>
+        <dl class="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+          @for(item of invoiceMatrix; track item) {
+            <app-matrics [data]="item"></app-matrics>
+          }
+        </dl>
+      </div>
+
+      <app-responsive-drawer #filterDrawer> 
+        <div drawer-header class="p-3 flex justify-between items-center border-b-2 border-gray-900/10 dark:border-gray-400/30 mb-4">
+          <h1 class="text-lg font-semibold">Filters</h1>
+          <mat-icon (click)="filterDrawer.toggleDrawer()" class="material-symbols-rounded">close</mat-icon>
+        </div>
+        <div class="flex-1 flex flex-col px-3 overflow-y-auto gap-y-3">
+          <mat-form-field class="hint-none" appearance="outline">
+            <mat-select>
+                <mat-option selected value="week">Week</mat-option>
+                <mat-option value="month">Month</mat-option>
+                <mat-option value="year">Year</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field class="hint-none" appearance="outline">
+              <mat-select>
+                  <mat-option selected value="current">Current month</mat-option>
+                  <mat-option value="dec">Dec 2024</mat-option>
+                  <mat-option value="nov">Nov 2024</mat-option>
+                  <mat-option value="oct">Oct 2024</mat-option>
+              </mat-select>
+          </mat-form-field>
+          <div>
+            <mat-form-field class="hint-none w-full" appearance="outline">
+                <input type="text"
+                      placeholder="Search indicators..."
+                      aria-label="Number"
+                      matInput
+                      [formControl]="myControl"
+                      [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  @for (option of filteredOptions | async; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+          </div>
+          <div class="flex gap-x-2 items-center">
+              <p><mat-slide-toggle>Only -ve</mat-slide-toggle></p>
+              <p><mat-slide-toggle>Only +ve</mat-slide-toggle></p>
+              <p><mat-slide-toggle>YoY</mat-slide-toggle></p>
+          </div>
+        </div>
+        <div drawer-footer class="flex justify-end px-3 gap-x-3">
+          <button mat-button>Reset</button>
+          <button mat-flat-button>Apply</button>
+        </div>
+      </app-responsive-drawer>
+    </div>
+  </div>
+  
+  <mat-menu #jumpTo="matMenu">
+    @for(option of options; track option) {
+      <button mat-menu-item>
+        {{option}}
+    </button>
+    }
+  </mat-menu>
