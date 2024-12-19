@@ -41,9 +41,9 @@ import { SafeHtmlPipe } from '../../core/pipes/safe-html.pipe';
 import hljs from 'highlight.js';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import BlotFormatter from 'quill-blot-formatter';
+// import BlotFormatter from 'quill-blot-formatter';
 import ImageUploader from 'quill-image-uploader';
-import { Mention, MentionBlot } from 'quill-mention';
+// import { Mention, MentionBlot } from 'quill-mention';
 import { ThemeService } from '../../core/services/theme.service';
 
 const fileTypeMap: { [key: string]: string } = {
@@ -67,10 +67,10 @@ const links: { [key: string]: string } = {
 Quill.register(
   {
     'modules/better-table': QuillBetterTable,
-    'modules/blotFormatter': BlotFormatter,
+    // 'modules/blotFormatter': BlotFormatter,
     'modules/imageUploader': ImageUploader,
-    'blots/mention': MentionBlot,
-    'modules/mention': Mention,
+    // 'blots/mention': MentionBlot,
+    // 'modules/mention': Mention,
   },
   true
 );
@@ -343,7 +343,6 @@ export class Editor implements AfterContentInit, ControlValueAccessor {
         ...modules,
         syntax: { hljs },
         table: false,
-        blotFormatter: {},
         'better-table': {
         operationMenu: {
           items: {
@@ -353,36 +352,6 @@ export class Editor implements AfterContentInit, ControlValueAccessor {
           }
         }
       },
-        mention: {
-          allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-          mentionDenotationChars: ['@', '#'],
-          positioningStrategy: 'fixed',
-          source: (searchTerm: any, renderList: any, mentionChar: any) => {
-            let values: any[] = [];
-
-            if (mentionChar === '@') {
-              values = this.mentionList();
-            } else {
-              values = this.mentionList();
-            }
-
-            if (searchTerm.length === 0) {
-              renderList(values, searchTerm);
-            } else {
-              const matches = [];
-              for (let i = 0; i < values.length; i++) {
-                if (
-                  values[i].value
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-                ) {
-                  matches.push(values[i]);
-                }
-              }
-              renderList(matches, searchTerm);
-            }
-          },
-        },
       },
       placeholder: this.placeholder,
       readOnly: this.readonly,
