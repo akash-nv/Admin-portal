@@ -30,9 +30,7 @@
               }
             ],
             "styles": [
-              "node_modules/quill-better-table/dist/quill-better-table.css",
               "node_modules/highlight.js/styles/atom-one-dark.min.css",
-              "node_modules/quill-mention/dist/quill.mention.css",
               "node_modules/quill/dist/quill.bubble.css",
               "node_modules/quill/dist/quill.snow.css",
               "src/styles.scss"
@@ -42,9 +40,7 @@
                   "dayjs",
                   "dayjs/plugin/localizedFormat",
                   "dayjs/plugin/customParseFormat",
-                  "quill-delta",
-                  "quill-blot-formatter",
-                  "quill-better-table"
+                  "quill-delta"
               ]
           },
           "configurations": {

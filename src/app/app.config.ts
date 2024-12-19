@@ -9,11 +9,11 @@ import { defer } from 'rxjs';
 import { DateAdapter, MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
 import { DayjsDateAdapter, DEFAULT_DATE_FORMATS } from './core/helpers/dayjs-adaptor.helper';
 
-const QuillBetterTable$ = defer(() => import('quill-better-table').then(m => m.default))
+// const QuillBetterTable$ = defer(() => import('quill-better-table').then(m => m.default))
 
-const customModules = [
-  { path: 'modules/better-table', implementation: QuillBetterTable$ }
-]
+// const customModules = [
+//   { path: 'modules/better-table', implementation: QuillBetterTable$ }
+// ]
 
 export const appConfig: ApplicationConfig = {
   providers: [
