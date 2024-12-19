@@ -9,7 +9,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npx ng version
+        - npm ci --legacy-peer-deps
     build:
       commands:
         - npx ng build --configuration=production
