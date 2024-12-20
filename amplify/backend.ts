@@ -8,16 +8,18 @@ export const backend = defineBackend({
   data,
 });
 
-// const externalDataSourcesStack = backend.createStack("MyExternalDataSources");
 
-// const externalTable = aws_dynamodb.Table.fromTableName(
-//   externalDataSourcesStack,
-//   "MyExternalPostTable",
-//   "AdminClinicTable"
-// );
+const externalDataSourcesStack = backend.createStack("MyExternalDataSources");
 
 
-// backend.data.addDynamoDbDataSource(
-//   "AdminClinicTable",
-//   externalTable
-// );
+const externalTable = aws_dynamodb.Table.fromTableName(
+  externalDataSourcesStack,
+  "MyExternalPostTable",
+  "Clinic-5xlsib7ig5e23fcrhee2jtjizi-hdev"
+);
+
+
+backend.data.addDynamoDbDataSource(
+  "AdminClinicTable",
+  externalTable
+);

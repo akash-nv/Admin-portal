@@ -10,29 +10,40 @@ const schema = a.schema({
   Todo: a
     .model({
       content: a.string(),
-    }).authorization((allow) => [allow.publicApiKey()]),
-    Note: a
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
+  Note: a
     .model({
       content: a.string(),
-      complete: a.boolean()
-    }).authorization((allow) => [allow.publicApiKey()]),
-    Clinic: a
-    .customType({
-      id: a.id(),
-      name: a.string(),
-      address: a.string(),
-      province: a.string(),
-      country: a.string(),
-      city: a.string(),
-      postalCode: a.string(),
-      phone: a.phone(),
-      fax: a.phone(),
-      agreedToTermsOfService: a.boolean(),
-      clinicLinkedReferralCenterId: a.id(),
-      hasDryEyePortalAccess: a.boolean(),
-      createdAt: a.datetime(),
-      updatedAt: a.datetime(),
+      complete: a.boolean(),
     })
+    .authorization((allow) => [allow.publicApiKey()]),
+  Clinic: a.customType({
+    id: a.id(),
+    name: a.string(),
+    address: a.string(),
+    province: a.string(),
+    country: a.string(),
+    city: a.string(),
+    postalCode: a.string(),
+    phone: a.phone(),
+    fax: a.phone(),
+    agreedToTermsOfService: a.boolean(),
+    clinicLinkedReferralCenterId: a.id(),
+    hasDryEyePortalAccess: a.boolean(),
+    createdAt: a.datetime(),
+    updatedAt: a.datetime(),
+  }),
+  getClinics: a
+    .query()
+    .returns(a.ref('Clinic'))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(
+      a.handler.custom({
+        dataSource: 'AdminClinicTable',
+        entry: './getClinics.js',
+      })
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;

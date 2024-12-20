@@ -39,9 +39,9 @@ export class LoginComponent {
   otp = viewChild.required(OtpInputComponent);
 
   doSignin() {
-    if(this.signinForm.valid && this.signinForm.value.email === 'aftab@csidryeye.com' && this.signinForm.value.password === 'CSI@123') {
+    if(this.signinForm.valid) {
       this.isLogging.set(true);
-      this.authService.signin(this.signinForm.value).subscribe({
+      this.authService.login(this.signinForm.value).subscribe({
         next: () => {
           this.isLogging.set(false);
           this.isOTP.set(true);

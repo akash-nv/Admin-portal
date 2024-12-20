@@ -102,5 +102,11 @@ export class WelcomeComponent {
 
   constructor() {
     // client.models.Clinic.list()
+    this.getAll()
+  }
+
+  async getAll() {
+    const { data, errors } = await client.queries.getClinics();
+    console.log(data, errors)
   }
 }
