@@ -36,7 +36,6 @@ const schema = a.schema({
   }),
   getClinics: a
     .query()
-    .arguments({})
     .returns(a.ref('Clinic').array())
     .authorization((allow) => [allow.publicApiKey()])
     .handler(
