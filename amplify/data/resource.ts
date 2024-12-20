@@ -27,7 +27,6 @@ const schema = a.schema({
       postalCode: a.string(),
       phone: a.phone(),
       fax: a.phone(),
-      logo: a.json(),
       agreedToTermsOfService: a.boolean(),
       clinicLinkedReferralCenterId: a.id(),
       hasDryEyePortalAccess: a.boolean(),

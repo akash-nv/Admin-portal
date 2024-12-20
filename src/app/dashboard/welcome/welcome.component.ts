@@ -99,4 +99,8 @@ export class WelcomeComponent {
       tag: 'About',
     },
   ];
+
+  constructor() {
+    // client.models.Clinic.list()
+  }
 }
