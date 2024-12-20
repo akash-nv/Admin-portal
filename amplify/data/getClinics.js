@@ -6,4 +6,9 @@ export function request(ctx) {
   });
 }
 
-export const response = (ctx) => ctx.result;
+export const response = (ctx) => {
+    if (ctx.result && ctx.result.Items) {
+        return ctx.result.Items; // Correctly return the list of items
+      }
+      return []; // Return an empty array if no items are found
+}
