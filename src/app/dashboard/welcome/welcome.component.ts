@@ -4,6 +4,9 @@ import { RouterLink } from '@angular/router';
 import { UpperCasePipe } from '@angular/common';
 import { Editor } from '../../ui-components/quill-editor/quill-editor.component';
 import { ThemeService } from '../../core/services/theme.service';
+import { Schema } from '../../../../amplify/data/resource';
+import { generateClient } from 'aws-amplify/data';
+const client = generateClient<Schema>();
 
 @Component({
   selector: 'app-welcome',

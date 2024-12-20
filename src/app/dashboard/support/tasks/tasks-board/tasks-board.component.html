@@ -27,6 +27,116 @@
             @for (task of grp.tasks; track $index) {
               <div cdkDrag class="bg-white dark:bg-gray-900 p-4 rounded-lg mb-4 cursor-pointer relative group" (click)="goToTaskDetails()">
                 <p class="text-sm font-semibold mb-2">Search inspirations for upcoming project</p>
+
+                <div class="flex flex-col gap-y-0.5 mb-2" (click)="$event.stopPropagation()">
+                  <div
+                    class="h-7 flex items-center relative"
+                    [matMenuTriggerFor]="assignee"
+                  >
+                    <mat-icon class="material-symbols-rounded absolute left-0"
+                      >person</mat-icon
+                    >
+                    <div class="pl-8 text-ellipsis overflow-hidden whitespace-nowrap">
+                      {{ collaborators[task - 1].value }}
+                    </div>
+                    <mat-menu #assignee class="max-h-96 overflow-auto">
+                      <div
+                        (click)="$event.stopPropagation()"
+                        class="bg-[#ecedf7] px-2 pb-2 pt-2 -mt-2 border-b dark:border-gray-400/30 sticky top-0 left-0 z-10"
+                      >
+                        <mat-form-field class="hint-none w-full" appearance="outline">
+                          <input type="text" matInput placeholder="Search" />
+                        </mat-form-field>
+                      </div>
+                      @for(item of collaborators; track item.value; let i = $index) {
+                      <button mat-menu-item [value]="item">
+                        <span class="flex items-center space-x-2">
+                          <div class="relative flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                              <span
+                                class="inline-flex h-8 w-8 p-2 items-center justify-center rounded-full bg-blue-600"
+                                [style.backgroundColor]="item.bgColor"
+                              >
+                                <span
+                                  class="text-xs font-medium leading-none text-white"
+                                  >{{ item.value | initials }}</span
+                                >
+                              </span>
+                            </div>
+                            <div class="min-w-0">
+                              <p
+                                class="text-sm font-medium text-gray-900 dark:text-gray-200"
+                              >
+                                {{ item.value }}
+                              </p>
+                              <p class="truncate font-normal text-xs text-gray-500">
+                                {{ item.email }}
+                              </p>
+                            </div>
+                          </div>
+                        </span>
+                      </button>
+                      }
+                    </mat-menu>
+                  </div>
+                  <div class="h-7 flex items-center relative">
+                    <mat-icon class="material-symbols-rounded absolute left-0"
+                      >date_range</mat-icon
+                    >
+                    <div
+                      class="w-full pl-8 text-ellipsis overflow-hidden whitespace-nowrap"
+                      (click)="picker.open()"
+                    >
+                      <mat-date-range-input [rangePicker]="picker">
+                        <input
+                          readonly
+                          matStartDate
+                          datePickerFormat="MMM DD YYYY"
+                          placeholder="Start"
+                          (click)="picker.open()"
+                        />
+                        <input
+                          readonly
+                          matEndDate
+                          datePickerFormat="MMM DD YYYY"
+                          placeholder="End"
+                        />
+                      </mat-date-range-input>
+                      <mat-date-range-picker #picker></mat-date-range-picker>
+                    </div>
+                  </div>
+                  <div
+                    class="h-7 flex items-center relative"
+                    [matMenuTriggerFor]="priority"
+                  >
+                    <mat-icon
+                      [ngStyle]="{ color: priorities[task - 1].color }"
+                      class="material-symbols-rounded absolute left-0"
+                      >flag_2</mat-icon
+                    >
+                    <div class="pl-8 text-ellipsis overflow-hidden whitespace-nowrap">
+                      <span class="text-gray-800 dark:text-gray-200">{{
+                        priorities[task - 1].label
+                      }}</span>
+                    </div>
+        
+                    <mat-menu #priority>
+                      @for(item of priorities; track item.label; let i = $index) {
+                      <button mat-menu-item [value]="i">
+                        <span class="flex items-center space-x-0">
+                          <mat-icon
+                            [ngStyle]="{ color: item.color }"
+                            class="material-symbols-rounded"
+                            >flag_2</mat-icon
+                          >
+                          <span class="text-base">{{ item.label }}</span>
+                        </span>
+                      </button>
+                      }
+                    </mat-menu>
+                  </div>
+                </div>
+
                 <div class="flex space-x-2 mb-2">
                   <span class="text-sm px-2.5 py-0.5 rounded font-semibold" [class]="taskStatus[grp.title]">#website</span>
                   <span class="text-sm px-2.5 py-0.5 rounded font-semibold" [class]="taskStatus[grp.title]">#client</span>
