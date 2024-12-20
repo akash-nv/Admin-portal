@@ -2,7 +2,7 @@ import * as ddb from "@aws-appsync/utils/dynamodb";
 
 export function request(ctx) {
   return ddb.scan({
-    TableName: ctx.stash.tableName || "AdminClinicTable",
+    TableName: "Clinic-5xlsib7ig5e23fcrhee2jtjizi-hdev",
   });
 }
 
