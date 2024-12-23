@@ -1,6 +1,6 @@
 export function request(ctx) {
   const { limit = 10, nextToken } = ctx.args;
-  return { operation: 'Scan', limit, nextToken };
+  return { operation: 'Scan'};
 }
 
 /**
