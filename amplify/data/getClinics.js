@@ -1,9 +1,7 @@
 import * as ddb from "@aws-appsync/utils/dynamodb";
 
 export function request(ctx) {
-  return ddb.scan({
-    TableName: "Clinic-5xlsib7ig5e23fcrhee2jtjizi-hdev",
-  });
+  return { operation: 'Scan' }
 }
 
 export const response = (ctx) => {
