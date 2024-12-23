@@ -1,12 +1,13 @@
-import * as ddb from "@aws-appsync/utils/dynamodb";
-
 export function request(ctx) {
-  return { operation: 'Scan' }
+  const { limit = 10, nextToken } = ctx.args;
+  return { operation: 'Scan', limit, nextToken };
 }
 
-export const response = (ctx) => {
-    if (ctx.result && ctx.result.Items) {
-        return ctx.result.Items; // Correctly return the list of items
-      }
-      return []; // Return an empty array if no items are found
+/**
+* Returns the scanned items
+* @param {import('@aws-appsync/utils').Context} ctx the context
+* @returns {*} a flat list of results from the Scan operation
+*/
+export function response(ctx) {
+  return ctx.result.items;
 }
