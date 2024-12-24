@@ -1,14 +1,10 @@
-import { util } from '@aws-appsync/utils';
+// import { util } from '@aws-appsync/utils';
 export function request(ctx) {
   const { limit = 10, nextToken } = ctx.args;
   return { operation: 'Scan'};
 }
 
-/**
-* Returns the scanned items
-* @param {import('@aws-appsync/utils').Context} ctx the context
-* @returns {*} a flat list of results from the Scan operation
-*/
+
 export async function response(ctx) {
   // return ctx.result.items;
 
@@ -31,7 +27,7 @@ export async function response(ctx) {
     },
   };
 
-  const ownerResult = await util.dynamoDB.batchGet(batchParams).promise();
+  const ownerResult = await dynamoDB.batchGet(batchParams).promise();
 
   // Step 4: Map owners by ID for quick lookup
   const ownerMap = ownerResult.Responses['Doctor-5xlsib7ig5e23fcrhee2jtjizi-hdev'].reduce(
