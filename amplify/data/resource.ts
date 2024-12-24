@@ -30,6 +30,7 @@ const schema = a.schema({
     fax: a.phone(),
     agreedToTermsOfService: a.boolean(),
     clinicLinkedReferralCenterId: a.id(),
+    owner: a.id(),
     hasDryEyePortalAccess: a.boolean(),
     createdAt: a.datetime(),
     updatedAt: a.datetime(),
